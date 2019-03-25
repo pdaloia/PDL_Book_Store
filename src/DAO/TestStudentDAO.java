@@ -14,8 +14,8 @@ public class TestStudentDAO {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM PO");
 			while(rs.next()) {
-				String phone= rs.getString("FNAME");
-				System.out.println("\t" + phone + "\t ");
+				String bid= rs.getString("FNAME");
+				System.out.println("\t" + bid + "\t ");
 			}//end while loop
 			con.close();
 			rs.close();
