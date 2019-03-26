@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=UTF-8" 
+		pageEncoding="UTF-8" session="false"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Book Store</title>
+</head>
+<body>
+
+<table>
+	<tr>
+		<td><a href="http://www.google.com">View Shopping Cart</a></td>
+		<td><a href="http://www.google.com">Login</a></td>
+		<td><a href="http://www.google.com">Logout</a></td>
+	</tr>
+</table>
+
+<table>
+	<tr>
+		<td><input type="text"/><input type="submit" value="Search Book Store"/></td>
+	</tr>
+</table>
+
+<table>
+	<tr>
+		<td>Browse by category:</td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
+	
+</body>
+</html>
+</jsp:root>
