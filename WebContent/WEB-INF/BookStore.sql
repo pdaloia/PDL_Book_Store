@@ -1,3 +1,4 @@
+DROP TABLE if exists Reviews;
 DROP TABLE if exists VisitEvent;
 DROP TABLE if exists POItem;
 DROP TABLE if exists PO;
@@ -24,6 +25,8 @@ PRIMARY KEY(bid)
 INSERT INTO Book (bid, title, price, category) VALUES ('b001', 'Little Prince', 20, 'Fiction');
 INSERT INTO Book (bid, title, price, category) VALUES ('b002','Physics', 201, 'Science');
 INSERT INTO Book (bid, title, price, category) VALUES ('b003','Mechanics' ,100,'Engineering');
+INSERT INTO Book (bid, title, price, category) VALUES ('b004','Mechanics2' ,100,'Engineering');
+INSERT INTO Book (bid, title, price, category) VALUES ('b005','Mechanics3' ,100,'Engineering');
 #
 /* Address
 * id: address id
@@ -116,7 +119,7 @@ INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12242015', 'b001', 'CART')
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12252015', 'b001', 'PURCHASE');
 #
 #
-/* account detals
+/* account details
 * 
 */
 CREATE TABLE Accounts (
@@ -133,5 +136,24 @@ PRIMARY KEY(username)
 INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('phild', 'Philip', 'Daloia', 'philip@gmail.com', '1234');
 INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('ammar', 'Ammar', 'Halawani', 'ammar@gmail.com', '1234');
 INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('daelee', 'Dae', 'Lee', 'dae@gmail.com', '1234');
+#
+#
+/* book reviews
+* 
+*/
+CREATE TABLE Reviews (
+bid VARCHAR(20) NOT NULL,
+review VARCHAR(255) NOT NULL,
+FOREIGN KEY(bid) REFERENCES Book(bid)
+);
+#
+# Dumping data for table 'Reviews'
+#
+INSERT INTO Reviews (bid, review) VALUES ('b001', 'bad');
+INSERT INTO Reviews (bid, review) VALUES ('b001', 'also think its bad');
+INSERT INTO Reviews (bid, review) VALUES ('b001', 'good but bad');
+INSERT INTO Reviews (bid, review) VALUES ('b002', 'bad');
+INSERT INTO Reviews (bid, review) VALUES ('b002', 'also think its bad');
+INSERT INTO Reviews (bid, review) VALUES ('b004', 'good but bad');
 #
 #
