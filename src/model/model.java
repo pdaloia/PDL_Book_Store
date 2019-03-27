@@ -22,6 +22,7 @@ import DAO.VisitEventDAO;
 
 import java.util.Map;
 
+
 public class model {
 
 private BookDAO bookDAO;
@@ -34,6 +35,22 @@ private BookDAO bookDAO;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public Map<String, BookBean> retrieveBooksByCategory(String categoryToSearch) throws Exception{
+		
+		Map<String, BookBean> rv = new HashMap<String, BookBean>();
+		rv = bookDAO.retrieveBooksByCategory(categoryToSearch);
+		return rv;
+		
+	}
+	
+	public Map<String, BookBean> retrieveBooksBySearch(String searchString) throws Exception{
+		
+		Map<String, BookBean> rv = new HashMap<String, BookBean>();
+		rv = bookDAO.retrieveBooksBySearch(searchString);
+		return rv;
 		
 	}
 
