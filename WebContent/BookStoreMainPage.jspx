@@ -20,6 +20,7 @@
 	</tr>
 </table>
 
+<h1>Search Books By Title</h1>
 <table>
 	<tr>
 		<td><input type="text"/><input type="submit" value="Search Book Store"/></td>
@@ -28,9 +29,12 @@
 
 <table>
 	<tr>
-		<td>Browse by category:</td>
-		<td></td>
-		<td></td>
+		<th>Browse by category:</th>
+	</tr>
+	<tr>
+		<td><a href="/PDL_Book_Store/DisplayBooksPage?category=science">Science</a></td>
+		<td><a href="/PDL_Book_Store/DisplayBooksPage?category=engineering">Engineering</a></td>
+		<td><a href="/PDL_Book_Store/DisplayBooksPage?category=fiction">Fiction</a></td>
 	</tr>
 </table>
 	
