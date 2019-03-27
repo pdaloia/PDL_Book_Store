@@ -3,6 +3,7 @@ DROP TABLE if exists POItem;
 DROP TABLE if exists PO;
 DROP TABLE if exists Address;
 DROP TABLE if exists Book;
+DROP TABLE if exists Accounts;
 
 /** bid: unique identifier of Book (like ISBN)
 * title: title of Book
@@ -113,5 +114,24 @@ FOREIGN KEY(bid) REFERENCES Book(bid)
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12202015', 'b001', 'VIEW');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12242015', 'b001', 'CART');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12252015', 'b001', 'PURCHASE');
+#
+#
+/* account detals
+* 
+*/
+CREATE TABLE Accounts (
+username varchar(30) NOT NULL,
+fname varchar(30) NOT NULL,
+lname varchar(30) NOT NULL,
+email varchar(100) NOT NULL,
+password varchar(100) NOT NULL,
+PRIMARY KEY(username)
+);
+#
+# Dumping data for table 'Accounts'
+#
+INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('phild', 'Philip', 'Daloia', 'philip@gmail.com', '1234');
+INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('ammar', 'Ammar', 'Halawani', 'ammar@gmail.com', '1234');
+INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('daelee', 'Dae', 'Lee', 'dae@gmail.com', '1234');
 #
 #
