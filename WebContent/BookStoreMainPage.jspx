@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 	<jsp:directive.page contentType="text/html; charset=UTF-8" 
-		pageEncoding="UTF-8" session="false"/>
+		pageEncoding="UTF-8" session="true"/>
 	<jsp:output doctype-root-element="html"
 		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
@@ -11,6 +11,7 @@
 <title>Book Store</title>
 </head>
 <body>
+<form action='' method='POST'>
 
 <table>
 	<tr>
@@ -23,21 +24,22 @@
 <h1>Search Books By Title</h1>
 <table>
 	<tr>
-		<td><input type="text"/><input type="submit" value="Search Book Store"/></td>
+		<td><input type="text" name='searchvalue' id='searchvalue'/></td>
+		<td><input type='submit' value='Search' name='textSearchButton' id='textSearchButton'/></td>
 	</tr>
 </table>
 
+
+<h1>Browse by category:</h1>
 <table>
-	<tr>
-		<th>Browse by category:</th>
-	</tr>
 	<tr>
 		<td><a href="/PDL_Book_Store/DisplayBooksPage?category=science">Science</a></td>
 		<td><a href="/PDL_Book_Store/DisplayBooksPage?category=engineering">Engineering</a></td>
 		<td><a href="/PDL_Book_Store/DisplayBooksPage?category=fiction">Fiction</a></td>
 	</tr>
 </table>
-	
+
+</form>
 </body>
 </html>
 </jsp:root>
