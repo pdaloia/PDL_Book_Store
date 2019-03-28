@@ -1,6 +1,7 @@
 package TestDAO;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,19 +11,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import DAO.BookDAO;
+import DAO.ReviewDAO;
 
 /**
- * Servlet implementation class TestBookDAO
+ * Servlet implementation class TestReviewDAO
  */
-@WebServlet("/TestBookDAO")
-public class TestBookDAO extends HttpServlet {
+@WebServlet("/TestReviewDAO")
+public class TestReviewDAO extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TestBookDAO() {
+    public TestReviewDAO() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,48 +33,43 @@ public class TestBookDAO extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-		BookDAO bookDAO = null;
-		Map<String, bean.BookBean> results = new HashMap<String, bean.BookBean>();
+		ReviewDAO reviewDAO = null;
+		Map<String, bean.ReviewBean> results = new HashMap<String, bean.ReviewBean>();
 		
 		try {
-			bookDAO = new BookDAO();
+			reviewDAO = new ReviewDAO();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.println("Retrieving all books -----------------");
+		System.out.println("Retrieving all reviews -----------------");
 		
 		try {
-			results = bookDAO.retrieveAllBooks();
+			results = reviewDAO.retrieveAllReviews();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		System.out.println(results);
 		
-		System.out.println("Retrieving books by category -----------------");
+		System.out.println("Retrieving reviews by bid -----------------");
 		
 		try {
-			results = bookDAO.retrieveBooksByCategory("Engineering");
+			results = reviewDAO.retrieveReviewsByBid("b001");
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		System.out.println(results);
 		
-		System.out.println("Retrieving books by title -----------------");
-		
+		System.out.println("adding review");
 		try {
-			results = bookDAO.retrieveBooksBySearch("Physics");
-		}catch (Exception e) {
+			reviewDAO.addReview("b001", "2", "3", 4);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		System.out.println(results);
-		
 	}
 
 	/**

@@ -11,18 +11,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.BookBean;
+import bean.ReviewBean;
 import model.model;
 
 /**
  * Servlet implementation class Start
  */
-@WebServlet({"/Start", "/DisplayBooksPage"})
+@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
 	private model model;
 	private static final String MODEL = "model";
 	private static final String LIST_OF_BOOKS = "listOfBooks";
+	private static final String LIST_OF_REVIEWS = "listOfReviews";
+	
+	//account details
+	private static final String SIGNED_IN = "signedIn";
+	private boolean signedIn;
+	private static final String ACCOUNT_EMAIL = "accountEmail";
+	private static final String ACCOUNT_USERNAME = "accountUserName";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -39,31 +47,26 @@ public class Start extends HttpServlet {
 		// TODO Auto-generated method stub
 		model = new model();
 		getServletContext().setAttribute(MODEL, model);
+		signedIn = false;
+		System.out.println("init");
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-		System.out.println("servlet started");
 		
 		//get values from URL
 		String url = this.getServletContext().getContextPath();
-		//System.out.println(url);
 		String URI = request.getRequestURI();
-		//System.out.println(URI);
 		String queryString = request.getQueryString();
-		//System.out.println(queryString);
+		
 		
 		//Main page
 		if(URI.contains("Start") && request.getParameter("textSearchButton") == null) {
 			target = "/BookStoreMainPage.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
 		}
-		
 		/*
 		 * Display a list/selection of books page
 		 * Go to this page when a list of books needs to be shown to the client
@@ -74,7 +77,6 @@ public class Start extends HttpServlet {
 		else if(URI.contains("DisplayBooksPage") || request.getParameter("textSearchButton") != null) {
 			Map<String, BookBean> currentList = new HashMap<String, BookBean>();
 			target = "/DisplayBooksPage.jspx";
-			System.out.println("got here");
 			if(request.getParameter("category") != null) {
 				System.out.println("Category searching!");
 				if(request.getParameter("category").equals("science")) {
@@ -103,7 +105,6 @@ public class Start extends HttpServlet {
 				}
 			}
 			else if(request.getParameter("textSearchButton").equals("Search")) {
-				System.out.println("got here");
 				try {
 					currentList = model.retrieveBooksBySearch(request.getParameter("searchvalue"));
 				} catch (Exception e) {
@@ -115,13 +116,56 @@ public class Start extends HttpServlet {
 			request.getRequestDispatcher(target).forward(request, response);
 			
 		}
-		
-		
-		
-		
-		
-		
-		
+		/*
+		 * Display page for viewing a certain books details
+		 */
+		else if(URI.contains("BookDetails")) {
+			if(request.getParameter("submitReview") != null) {
+				if(request.getParameter("submitReview").equals("Submit")) {
+					String bid = request.getParameter("bookid");
+					String review = request.getParameter("reviewText");
+					String email = request.getParameter("reviewEmail");
+					int rating = Integer.parseInt(request.getParameter("reviewRating"));
+					try {
+						model.addReview(bid, review, email, rating);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			String bidToSearch;
+			bidToSearch = request.getParameter("bookid");
+			Map<String, BookBean> currentList = new HashMap<String, BookBean>();
+			try {
+				currentList = model.retrieveBooksByBID(bidToSearch);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			request.setAttribute(LIST_OF_BOOKS, currentList.get(request.getParameter("bookid")));
+			target = "/BookDetails.jspx";
+			request.getRequestDispatcher(target).forward(request, response);
+			
+		}
+		/*
+		 * Seeing all reviews for a book
+		 */
+		if(URI.contains("Reviews")) {
+			String bidToSearch;
+			bidToSearch = request.getParameter("bookid");
+			
+			Map<String, ReviewBean> currentList = new HashMap<String, ReviewBean>();
+			try {
+				currentList = model.retrieveReviewsByBID(bidToSearch);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			request.setAttribute(LIST_OF_REVIEWS, currentList);
+			target = "/BookReviews.jspx";
+			request.getRequestDispatcher(target).forward(request, response);
+		}
 		
 	}
 
