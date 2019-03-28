@@ -143,17 +143,19 @@ INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('daelee',
 */
 CREATE TABLE Reviews (
 bid VARCHAR(20) NOT NULL,
+email VARCHAR(100) NOT NULL,
 review VARCHAR(255) NOT NULL,
+rating INT UNSIGNED NOT NULL,
 FOREIGN KEY(bid) REFERENCES Book(bid)
 );
 #
 # Dumping data for table 'Reviews'
 #
-INSERT INTO Reviews (bid, review) VALUES ('b001', 'bad');
-INSERT INTO Reviews (bid, review) VALUES ('b001', 'also think its bad');
-INSERT INTO Reviews (bid, review) VALUES ('b001', 'good but bad');
-INSERT INTO Reviews (bid, review) VALUES ('b002', 'bad');
-INSERT INTO Reviews (bid, review) VALUES ('b002', 'also think its bad');
-INSERT INTO Reviews (bid, review) VALUES ('b004', 'good but bad');
+INSERT INTO Reviews (bid, email, review, rating) VALUES ('b001', 'phil@gmail.com', 'good', 4);
+INSERT INTO Reviews (bid, email, review, rating) VALUES ('b001', 'dae@gmail.com', 'also think its bad', 2);
+INSERT INTO Reviews (bid, email, review, rating) VALUES ('b001', 'ammar@gmail.com', 'good but bad', 3);
+INSERT INTO Reviews (bid, email, review, rating) VALUES ('b002', '123@gmail.com', 'bad', 2);
+INSERT INTO Reviews (bid, email, review, rating) VALUES ('b002', '321@gmail.com', 'also think its bad', 1);
+INSERT INTO Reviews (bid, email, review, rating) VALUES ('b004', '111@gmail.com', 'good but bad', 3);
 #
 #
