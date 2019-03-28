@@ -35,11 +35,12 @@ public class AddressDAO {
 			String id = r.getString("ID");
 			String street = r.getString("STREET");
 			String province = r.getString("PROVINCE");
+			String city = r.getString("CITY");
 			String country = r.getString("COUNTRY");
 			String zip = r.getString("ZIP");
 			String phone = r.getString("PHONE");
 			AddressBean current;
-			current = new AddressBean(id, street, province, country, zip, phone);
+			current = new AddressBean(id, street, province, city, country, zip, phone);
 			rv.put(id, current);
 			
 		}

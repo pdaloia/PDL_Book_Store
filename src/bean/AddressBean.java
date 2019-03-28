@@ -5,6 +5,7 @@ public class AddressBean {
 	private String id;
 	private String street;
 	private String province;
+	private String city;
 	private String country;
 	private String zip;
 	private String phone;
@@ -14,11 +15,12 @@ public class AddressBean {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AddressBean(String id, String street, String province, String country, String zip, String phone) {
+	public AddressBean(String id, String street, String province, String city,  String country, String zip, String phone) {
 		super();
 		this.id = id;
 		this.street = street;
 		this.province = province;
+		this.city = city; 
 		this.country = country;
 		this.zip = zip;
 		this.phone = phone;
@@ -46,6 +48,14 @@ public class AddressBean {
 
 	public void setProvince(String province) {
 		this.province = province;
+	}
+	
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	public String getCountry() {
