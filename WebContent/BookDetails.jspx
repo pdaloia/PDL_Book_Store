@@ -17,11 +17,13 @@
 <form action='' method='POST'>
 
 <div>
+<c:set var="username" value="${accountUserName}"/>
 <table align="right">
 	<tr>
 		<td><a href="/PDL_Book_Store/Start">Home</a></td>
 		<td><a href="http://www.google.com">View Shopping Cart</a></td>
-		<td><a href="http://www.google.com">Login</a></td>
+		<c:if test="${empty username}"><td><a href="http://www.google.com">Login</a></td></c:if>
+		<c:if test="${not empty username}"><td>${username}</td></c:if>
 		<td><a href="http://www.google.com">Register</a></td>
 	</tr>
 </table>
@@ -33,7 +35,7 @@
 	<p>${book.title}</p>
 	<h3>Price:</h3>
 	<p>${book.price}</p>
-	<a href="http://www.google.com">Add Book To Shopping Cart</a> <br/> <br/>
+	<input type="submit" value='Add to Cart' name='addToCart' id='addToCart'/> <br/> <br/>
 	<a href="/PDL_Book_Store/Reviews?bookid=${book.bid}">See reviews for this book</a>
 	<h3>Leave a Review:</h3>
 	Rating (Out of 5):
