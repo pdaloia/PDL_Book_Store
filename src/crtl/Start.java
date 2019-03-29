@@ -1,6 +1,7 @@
 package crtl;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bean.AccountBean;
 import bean.BookBean;
 import bean.ReviewBean;
 import model.model;
@@ -17,7 +19,7 @@ import model.model;
 /**
  * Servlet implementation class Start
  */
-@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews"})
+@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -25,12 +27,11 @@ public class Start extends HttpServlet {
 	private static final String MODEL = "model";
 	private static final String LIST_OF_BOOKS = "listOfBooks";
 	private static final String LIST_OF_REVIEWS = "listOfReviews";
+	private static final String LOGIN_ERROR_MESSAGE = "loginErrorMessage";
 	
 	//account details
-	private static final String SIGNED_IN = "signedIn";
-	private boolean signedIn;
-	private static final String ACCOUNT_EMAIL = "accountEmail";
-	private static final String ACCOUNT_USERNAME = "accountUserName";
+	private AccountBean accountBean;
+	private static final String ACCOUNT_BEAN = "accountBean";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -47,7 +48,6 @@ public class Start extends HttpServlet {
 		// TODO Auto-generated method stub
 		model = new model();
 		getServletContext().setAttribute(MODEL, model);
-		signedIn = false;
 		System.out.println("init");
 	}
 
@@ -56,11 +56,12 @@ public class Start extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		System.out.println("Servlet started");
+		
 		//get values from URL
 		String url = this.getServletContext().getContextPath();
 		String URI = request.getRequestURI();
 		String queryString = request.getQueryString();
-		
 		
 		//Main page
 		if(URI.contains("Start") && request.getParameter("textSearchButton") == null) {
@@ -151,7 +152,7 @@ public class Start extends HttpServlet {
 		/*
 		 * Seeing all reviews for a book
 		 */
-		if(URI.contains("Reviews")) {
+		else if(URI.contains("Reviews")) {
 			String bidToSearch;
 			bidToSearch = request.getParameter("bookid");
 			
@@ -165,6 +166,54 @@ public class Start extends HttpServlet {
 			request.setAttribute(LIST_OF_REVIEWS, currentList);
 			target = "/BookReviews.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
+		}
+		/*
+		 * login page
+		 */
+		else if(URI.contains("Login")) {
+			
+			if(request.getParameter("loginSubmit") != null) {
+				if(request.getParameter("loginSubmit").equals("Submit")) {
+					String loggedInUserName = request.getParameter("givenUserName");
+					String loggedInPassword = request.getParameter("givenPassword");
+					try {
+						if(model.retrieveAccountByUsername(loggedInUserName, loggedInPassword) != null) {
+							accountBean = model.retrieveAccountByUsername(loggedInUserName, loggedInPassword);
+							request.getSession().setAttribute(LOGIN_ERROR_MESSAGE, null);
+							response.sendRedirect("/PDL_Book_Store/Start");
+						}
+						else {
+							request.getSession().setAttribute(LOGIN_ERROR_MESSAGE, "Not a valid login, try again.");
+							System.out.println("user not found");
+							target = "/LoginPage.jspx";
+							request.getRequestDispatcher(target).forward(request, response);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					request.getSession().setAttribute(ACCOUNT_BEAN, accountBean);
+					
+				}
+				
+			}
+			else {
+				target = "/LoginPage.jspx";
+				request.getRequestDispatcher(target).forward(request, response);
+			}
+			
+		}
+		/*
+		 * logout page
+		 */
+		else if (URI.contains("Logout")) {
+			
+			request.getSession().setAttribute(ACCOUNT_BEAN, null);
+			System.out.println(request.getSession().getAttribute(ACCOUNT_BEAN));
+			
+			target = "/LogoutPage.jspx";
+			request.getRequestDispatcher(target).forward(request, response);
+			
 		}
 		
 	}
