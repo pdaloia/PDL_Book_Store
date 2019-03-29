@@ -11,7 +11,7 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Book Selection</title>
+<title>Login</title>
 </head>
 <body>
 <form action='' method='POST'>
@@ -29,20 +29,17 @@
 	</tr>
 </table>
 </div>
+
+	<h1>Login to your account</h1>
+	UserName:
+	<input type="text" id="givenUserName" name="givenUserName"/>
+	<br/>
+	Password:
+	<input type="text" id="givenPassword" name="givenPassword"/>
+	<br/>
+	<input type="submit" id="loginSubmit" name="loginSubmit"/>
 	
-	<h1>List of Books:</h1>
-	
-	<ul>
-	<c:forEach var="book" items="${listOfBooks}">
-	   <li>
-	   	<a href="/PDL_Book_Store/BookDetails?bookid=${book.key}">${book.value.title}</a>
-	   	<br/>
-	   	Book ID: ${book.key}
-	   </li>
-	</c:forEach>
-	</ul>
-	
-</form>	
+</form>
 </body>
 </html>
 </jsp:root>

@@ -11,9 +11,10 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Book Selection</title>
+<title>Successfully Logged Out</title>
 </head>
 <body>
+
 <form action='' method='POST'>
 
 <div>
@@ -29,20 +30,11 @@
 	</tr>
 </table>
 </div>
-	
-	<h1>List of Books:</h1>
-	
-	<ul>
-	<c:forEach var="book" items="${listOfBooks}">
-	   <li>
-	   	<a href="/PDL_Book_Store/BookDetails?bookid=${book.key}">${book.value.title}</a>
-	   	<br/>
-	   	Book ID: ${book.key}
-	   </li>
-	</c:forEach>
-	</ul>
-	
-</form>	
+
+Successfully Logged Out
+
+</form>
+
 </body>
 </html>
 </jsp:root>
