@@ -4,9 +4,9 @@
 	<Manager pathname=""/>
 	<Resource name="jdbc/EECS" factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
 	username="root"
-	password="12345678"
+	password="root"
 	type="javax.sql.DataSource"
 	driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://localhost:3306/project;create=true"/>
+	url="jdbc:mysql://localhost:3306/project"/>
 <ResourceLink global="jdbc/EECS" name="jdbc/EECS" type="javax.sql.DataSource"></ResourceLink>
 </Context>
