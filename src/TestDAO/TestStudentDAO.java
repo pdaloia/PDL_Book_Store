@@ -1,4 +1,4 @@
-package DAO;
+package TestDAO;
 
 import java.sql.*;
 import javax.naming.InitialContext;

@@ -22,6 +22,7 @@ public class PODAO {
 		}
 	}
 	
+	
 	public Map<String, POBean> retrieveAllPOs() throws SQLException{
 		//String query = "select * from students where surname like '%" + namePrefix + "%' and credit_taken >= " + credit_taken;
 		String query = "select * from po";
