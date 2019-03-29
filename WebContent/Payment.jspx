@@ -22,8 +22,18 @@
 				<tr>
 					<td><a href="/PDL_Book_Store/Start">Home</a></td>
 					<td><a href="http://www.google.com">View Shopping Cart</a></td>
-					<td><a href="http://www.google.com">Login</a></td>
-					<td><a href="http://www.google.com">Register</a></td>
+					<c:if test="${empty accountBean}">
+						<td><a href="/PDL_Book_Store/Login">Login</a></td>
+					</c:if>
+					<c:if test="${not empty accountBean}">
+						<td>${accountBean.username}</td>
+					</c:if>
+					<c:if test="${empty accountBean}">
+						<td><a href="http://www.google.com">Register</a></td>
+					</c:if>
+					<c:if test="${not empty accountBean}">
+						<td><a href="/PDL_Book_Store/Logout">Logout</a></td>
+					</c:if>
 				</tr>
 			</table>
 		</div>
@@ -49,11 +59,10 @@
 		</table>
 
 		<c:if test="${empty showResult }">
-			<c:if test="${empty username}">
-				<!-- ================ Should be redirected ======================= -->	
-				Please <a href="/PDL_Book_Store/LogInPage">Login Here</a> to make a Purchase.
+			<c:if test="${empty accountBean}">
+				Please <a href="/PDL_Book_Store/Login">Login Here</a> to make a Purchase.
 			</c:if>
-				<!-- ================ Test to see if table is correct. Change to not empty username to check if user is logged in ======================= -->	
+			<!-- ================ Test to see if table is correct. Change to not empty username to check if user is logged in ======================= -->
 			<c:if test="${empty username}">
 				<table id="bottomTable" name="bottomTable">
 					<tr>
@@ -71,17 +80,13 @@
 
 					</tr>
 					<tr>
-						<td>
-							<label for="CardType">Card Type:</label>
-						</td>
-						<td>
-							<select name="CardType" id="option">
+						<td><label for="CardType">Card Type:</label></td>
+						<td><select name="CardType" id="option">
 								<option value="Visa" id="option">Visa</option>
 								<option value="MasterCard" id="option">MasterCard</option>
 								<option value="American Express" id="option">American
 									Express</option>
-							</select>
-						</td>
+						</select></td>
 					</tr>
 					<tr>
 						<td></td>
@@ -97,15 +102,12 @@
 
 					<tr>
 						<td><label for="CVC">CVC:</label></td>
-						<td><input name="CVC" id="CVC" type="text"
-							value="${CVC}" /></td>
+						<td><input name="CVC" id="CVC" type="text" value="${CVC}" /></td>
 					</tr>
 					<tr>
-						<td id="label">
-							<label for="expirationDate">Expiration Date :</label>
-						</td>
-						<td>
-							<select name="month" id="option">
+						<td id="label"><label for="expirationDate">Expiration
+								Date :</label></td>
+						<td><select name="month" id="option">
 								<option value="01" id="option">01</option>
 								<option value="02" id="option">02</option>
 								<option value="03" id="option">03</option>
@@ -118,10 +120,8 @@
 								<option value="10" id="option">10</option>
 								<option value="11" id="option">11</option>
 								<option value="12" id="option">12</option>
-							</select>
-						</td>
-						<td>
-							<select name="year" id="option">
+						</select></td>
+						<td><select name="year" id="option">
 								<option value="19" id="option">19</option>
 								<option value="20" id="option">20</option>
 								<option value="21" id="option">21</option>
@@ -134,8 +134,7 @@
 								<option value="28" id="option">28</option>
 								<option value="28" id="option">29</option>
 								<option value="28" id="option">30</option>
-							</select>
-						</td>
+						</select></td>
 					</tr>
 					<tr>
 						<td><label for="question">Shipping Address different
