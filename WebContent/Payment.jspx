@@ -11,6 +11,12 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/res/mc.css" type="text/css" />
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/res/mc.js">
+	;
+</script>
 <title>Payment</title>
 </head>
 <body>
@@ -60,122 +66,136 @@
 
 		<c:if test="${empty showResult }">
 			<c:if test="${empty accountBean}">
-				Please <a href="/PDL_Book_Store/Login">Login Here</a> to make a Purchase.
+				Please <a href="/PDL_Book_Store/Login">Login Here</a> to make a Purchase.<br />
 			</c:if>
-			<!-- ================ Test to see if table is correct. Change to not empty username to check if user is logged in ======================= -->
-			<c:if test="${empty username}">
+			<c:if test="${empty accountBean}">
 				<table id="bottomTable" name="bottomTable">
 					<tr>
-						<td><h2>Payment Method:</h2></td>
+						<td><label for="question">Or Are you a new customer?
+						</label> <input type="checkbox" id="newCheckBox" name="newCheckBox"
+							onclick="newCustomer();" /></td>
 					</tr>
 					<tr>
-						<td><label for="cardFirstName">First Name :</label></td>
-						<td><input name="cardFirstName" id="cardFirstName"
-							type="text" value="${cardFirstName}" /></td>
-					</tr>
-					<tr>
-						<td><label for="cardLastName">Last Name :</label></td>
-						<td><input name="cardLastName" id="cardLastName" type="text"
-							value="${cardLastName}" /></td>
-
-					</tr>
-					<tr>
-						<td><label for="CardType">Card Type:</label></td>
-						<td><select name="CardType" id="option">
-								<option value="Visa" id="option">Visa</option>
-								<option value="MasterCard" id="option">MasterCard</option>
-								<option value="American Express" id="option">American
-									Express</option>
-						</select></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><img
-							src="http://i1030.photobucket.com/albums/y363/varsharagav/cc_zpszqhifadr.png"
-							width="150px" height='25px' /></td>
-					</tr>
-					<tr>
-						<td><label for="cardNumber">Card Number :</label></td>
-						<td><input name="cardNumber" id="cardNumber" type="text"
-							value="${cardNumber}" /></td>
-					</tr>
-
-					<tr>
-						<td><label for="CVC">CVC:</label></td>
-						<td><input name="CVC" id="CVC" type="text" value="${CVC}" /></td>
-					</tr>
-					<tr>
-						<td id="label"><label for="expirationDate">Expiration
-								Date :</label></td>
-						<td><select name="month" id="option">
-								<option value="01" id="option">01</option>
-								<option value="02" id="option">02</option>
-								<option value="03" id="option">03</option>
-								<option value="04" id="option">04</option>
-								<option value="05" id="option">05</option>
-								<option value="06" id="option">06</option>
-								<option value="07" id="option">07</option>
-								<option value="08" id="option">08</option>
-								<option value="09" id="option">09</option>
-								<option value="10" id="option">10</option>
-								<option value="11" id="option">11</option>
-								<option value="12" id="option">12</option>
-						</select></td>
-						<td><select name="year" id="option">
-								<option value="19" id="option">19</option>
-								<option value="20" id="option">20</option>
-								<option value="21" id="option">21</option>
-								<option value="22" id="option">22</option>
-								<option value="23" id="option">23</option>
-								<option value="24" id="option">24</option>
-								<option value="25" id="option">25</option>
-								<option value="26" id="option">26</option>
-								<option value="27" id="option">27</option>
-								<option value="28" id="option">28</option>
-								<option value="28" id="option">29</option>
-								<option value="28" id="option">30</option>
-						</select></td>
-					</tr>
-					<tr>
-						<td><label for="question">Shipping Address different
-								than Mailing Address?</label></td>
-						<td><input type="checkbox" id="q" name="q"
-							onclick="myFunction(this.checked);" /></td>
-					</tr>
-					<TR>
-						<TD>
-							<div id="divider" style="display: none">
-
+						<td>
+							<div id="newCustomeOrder" style="display: none">
 								<table id="table">
+									<tr>
+										<td><h2>Account Information:</h2></td>
+									</tr>
+									<tr>
+										<td><label for="newCstmrAccount">Account Name :</label></td>
+										<td><input name="newCstmrAccount" id="newCstmrAccount"
+											type="text" placeholder="Enter account name"
+											value="${newCstmrAccount}" /></td>
+									</tr>
+									<tr>
+										<td><label for="newCstmrPassword">Password :</label></td>
+										<td><input name="newCstmrPassword" id="newCstmrPassword"
+											type="text" placeholder="Enter password"
+											value="${newCstmrPassword}" /></td>
+
+									</tr>
+									<tr>
+										<td><h2>Payment Method:</h2></td>
+									</tr>
+									<tr>
+										<td><label for="cardFirstName">First Name :</label></td>
+										<td><input name="cardFirstName" id="cardFirstName"
+											type="text" value="${cardFirstName}" /></td>
+									</tr>
+									<tr>
+										<td><label for="cardLastName">Last Name :</label></td>
+										<td><input name="cardLastName" id="cardLastName"
+											type="text" value="${cardLastName}" /></td>
+									</tr>
+									<tr>
+										<td><label for="CardType">Card Type:</label></td>
+										<td><select name="CardType" id="option">
+												<option value="Visa" id="option">Visa</option>
+												<option value="MasterCard" id="option">MasterCard</option>
+												<option value="American Express" id="option">American
+													Express</option>
+										</select></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td><img
+											src="http://i1030.photobucket.com/albums/y363/varsharagav/cc_zpszqhifadr.png"
+											width="150px" height='25px' /></td>
+									</tr>
+									<tr>
+										<td><label for="cardNumber">Card Number :</label></td>
+										<td><input name="cardNumber" id="cardNumber" type="text"
+											value="${cardNumber}" /></td>
+									</tr>
+									<tr>
+										<td><label for="CVC">CVC:</label></td>
+										<td><input name="CVC" id="CVC" type="text" value="${CVC}" /></td>
+									</tr>
+									<tr>
+										<td id="label"><label for="expirationDate">
+												Expiration Date :</label></td>
+										<td><select name="month" id="option">
+												<option value="01" id="option">01</option>
+												<option value="02" id="option">02</option>
+												<option value="03" id="option">03</option>
+												<option value="04" id="option">04</option>
+												<option value="05" id="option">05</option>
+												<option value="06" id="option">06</option>
+												<option value="07" id="option">07</option>
+												<option value="08" id="option">08</option>
+												<option value="09" id="option">09</option>
+												<option value="10" id="option">10</option>
+												<option value="11" id="option">11</option>
+												<option value="12" id="option">12</option>
+										</select></td>
+										<td><select name="year" id="option">
+												<option value="19" id="option">19</option>
+												<option value="20" id="option">20</option>
+												<option value="21" id="option">21</option>
+												<option value="22" id="option">22</option>
+												<option value="23" id="option">23</option>
+												<option value="24" id="option">24</option>
+												<option value="25" id="option">25</option>
+												<option value="26" id="option">26</option>
+												<option value="27" id="option">27</option>
+												<option value="28" id="option">28</option>
+												<option value="28" id="option">29</option>
+												<option value="28" id="option">30</option>
+										</select></td>
+									</tr>
+									<tr>
+										<td><h2>Shipping Address:</h2></td>
+									</tr>
 									<tr>
 										<td><label for="street">Street: </label></td>
 										<td><input name="street" id="street" type="text" /></td>
-									</tr>
-									<tr>
 										<td><label for="province">Province:</label></td>
 										<td><input name="province" id="province" type="text" /></td>
 									</tr>
+
 									<tr>
 										<td><label for="country">Country: </label></td>
 										<td><input name="country" id="country" type="text" /></td>
-									</tr>
-									<tr>
 										<td><label for="zip">Zip: </label></td>
 										<td><input name="zip" id="zip" type="text" /></td>
 									</tr>
+
 									<tr>
-										<td><label for="Phone">Phone: </label></td>
-										<td><input name="Phone" id="Phone" type="text" /></td>
+										<td><label for="cell">Cell phone: </label></td>
+										<td><input name="cell" id="cell" type="text" /></td>
+										<td><label for="Tele">Telephone: </label></td>
+										<td><input name="Tele" id="Tele" type="text" /></td>
+									</tr>
+									<tr>
+										<td><input type="submit" name="confirmOrder"
+											value="Confirm Order" id="confirmOrder" /></td>
 									</tr>
 								</table>
 							</div>
-						</TD>
-						<TD><input type="submit" name="submitOrder"
-							value="Submit Order" id="submitOrder" /></TD>
-
-					</TR>
+						</td>
+					</tr>
 				</table>
-
 			</c:if>
 		</c:if>
 		<c:if test="${not empty showResult }">
