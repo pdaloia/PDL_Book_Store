@@ -84,7 +84,20 @@ public class TestAccountDAO extends HttpServlet {
 			e.printStackTrace();
 		}
 		
+		System.out.println("adding account ---------------------");
 		
+		try {
+			if(accountDAO.checkForUser("pgfds") == false) {
+				accountDAO.addNewAccount("pgfds", "bfd", "bfdbf", "p@fbdbd", "bfdfdb");
+				System.out.println("user added");
+			}
+			else {
+				System.out.println("user already exists");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
