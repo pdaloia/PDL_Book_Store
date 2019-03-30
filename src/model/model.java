@@ -105,5 +105,11 @@ private AccountDAO accountDAO;
 		return accountDAO.retrieveAccountByUsername(givenUsername, givenPassword);
 		
 	}
+	
+	public void addNewAccount(String username, String fname, String lname, String email, String password) throws Exception{
+		
+		accountDAO.addNewAccount(username, fname, lname, email, password);
+		
+	}
 
 }
