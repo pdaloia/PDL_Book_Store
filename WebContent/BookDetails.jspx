@@ -24,7 +24,7 @@
 		<td><a href="http://www.google.com">View Shopping Cart</a></td>
 		<c:if test="${empty accountBean}"><td><a href="/PDL_Book_Store/Login">Login</a></td></c:if>
 		<c:if test="${not empty accountBean}"><td>${accountBean.username}</td></c:if>
-		<c:if test="${empty accountBean}"><td><a href="http://www.google.com">Register</a></td></c:if>
+		<c:if test="${empty accountBean}"><td><a href="/PDL_Book_Store/Register">Register</a></td></c:if>
 		<c:if test="${not empty accountBean}"><td><a href="/PDL_Book_Store/Logout">Logout</a></td></c:if>
 	</tr>
 </table>
@@ -38,18 +38,23 @@
 	<p>${book.price}</p>
 	<input type="submit" value='Add to Cart' name='addToCart' id='addToCart'/> <br/> <br/>
 	<a href="/PDL_Book_Store/Reviews?bookid=${book.bid}">See reviews for this book</a>
-	<h3>Leave a Review:</h3>
-	Rating (Out of 5):
-	<input type="radio" name="reviewRating" id="reviewRating" value="1"/> 1
-    <input type="radio" name="reviewRating" id="reviewRating" value="2"/> 2
-    <input type="radio" name="reviewRating" id="reviewRating" value="3" checked="checked"/> 3
-    <input type="radio" name="reviewRating" id="reviewRating" value="4"/> 4
-    <input type="radio" name="reviewRating" id="reviewRating" value="5"/> 5 <br/>
-	<textarea rows="5" cols="60" name="reviewText">Enter Your Review Here!</textarea>
 	<br/>
-	Email:
-	<input type="text" name="reviewEmail" id="reviewEmail"/> <br/>
-	<input type="submit" name="submitReview" id="submitReview"/>
+	
+	<c:if test="${not empty accountBean}">
+		<h3>Leave a Review:</h3>
+		Rating (Out of 5):
+		<input type="radio" name="reviewRating" id="reviewRating" value="1"/> 1
+	    <input type="radio" name="reviewRating" id="reviewRating" value="2"/> 2
+	    <input type="radio" name="reviewRating" id="reviewRating" value="3" checked="checked"/> 3
+	    <input type="radio" name="reviewRating" id="reviewRating" value="4"/> 4
+	    <input type="radio" name="reviewRating" id="reviewRating" value="5"/> 5 <br/>
+		<textarea rows="5" cols="60" name="reviewText">Enter Your Review Here!</textarea>
+		<br/>
+		<input type="submit" name="submitReview" id="submitReview"/>
+	</c:if>
+	<c:if test="${empty accountBean}">
+		<a href="/PDL_Book_Store/Login">Login to leave a review</a>
+	</c:if>
 	
 	
 </form>

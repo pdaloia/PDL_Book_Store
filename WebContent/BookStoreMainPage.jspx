@@ -24,7 +24,7 @@
 		<td><a href="http://www.google.com">View Shopping Cart</a></td>
 		<c:if test="${empty accountBean}"><td><a href="/PDL_Book_Store/Login">Login</a></td></c:if>
 		<c:if test="${not empty accountBean}"><td>${accountBean.username}</td></c:if>
-		<c:if test="${empty accountBean}"><td><a href="http://www.google.com">Register</a></td></c:if>
+		<c:if test="${empty accountBean}"><td><a href="/PDL_Book_Store/Register">Register</a></td></c:if>
 		<c:if test="${not empty accountBean}"><td><a href="/PDL_Book_Store/Logout">Logout</a></td></c:if>
 	</tr>
 </table>
