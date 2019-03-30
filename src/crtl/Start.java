@@ -19,7 +19,7 @@ import model.model;
 /**
  * Servlet implementation class Start
  */
-@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout"})
+@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout", "/Register"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -28,6 +28,7 @@ public class Start extends HttpServlet {
 	private static final String LIST_OF_BOOKS = "listOfBooks";
 	private static final String LIST_OF_REVIEWS = "listOfReviews";
 	private static final String LOGIN_ERROR_MESSAGE = "loginErrorMessage";
+	private static final String REGISTER_ERROR_MESSAGE = "registerErrorMessage";
 	
 	//account details
 	private AccountBean accountBean;
@@ -125,7 +126,8 @@ public class Start extends HttpServlet {
 				if(request.getParameter("submitReview").equals("Submit")) {
 					String bid = request.getParameter("bookid");
 					String review = request.getParameter("reviewText");
-					String email = request.getParameter("reviewEmail");
+					accountBean = (AccountBean) request.getSession().getAttribute(ACCOUNT_BEAN);
+					String email = accountBean.getEmail();
 					int rating = Integer.parseInt(request.getParameter("reviewRating"));
 					try {
 						model.addReview(bid, review, email, rating);
@@ -180,6 +182,7 @@ public class Start extends HttpServlet {
 						if(model.retrieveAccountByUsername(loggedInUserName, loggedInPassword) != null) {
 							accountBean = model.retrieveAccountByUsername(loggedInUserName, loggedInPassword);
 							request.getSession().setAttribute(LOGIN_ERROR_MESSAGE, null);
+							request.getSession().setAttribute(ACCOUNT_BEAN, accountBean);
 							response.sendRedirect("/PDL_Book_Store/Start");
 						}
 						else {
@@ -191,8 +194,6 @@ public class Start extends HttpServlet {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
-					request.getSession().setAttribute(ACCOUNT_BEAN, accountBean);
 					
 				}
 				
@@ -207,13 +208,55 @@ public class Start extends HttpServlet {
 		 * logout page
 		 */
 		else if (URI.contains("Logout")) {
-			
 			request.getSession().setAttribute(ACCOUNT_BEAN, null);
 			System.out.println(request.getSession().getAttribute(ACCOUNT_BEAN));
 			
 			target = "/LogoutPage.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
-			
+		}
+		/*
+		 * Registration page
+		 */
+		else if(URI.contains("Register")) {
+			String enteredUserName = request.getParameter("enteredUserName");
+			String enteredFirstName = request.getParameter("enteredFirstName");
+			String enteredLastName = request.getParameter("enteredLastName");
+			String enteredEmail = request.getParameter("enteredEmail");
+			String enteredPassword = request.getParameter("enteredPassword");
+			if(request.getParameter("registerSubmit") != null) {
+				if(enteredUserName.equals("") || enteredFirstName.equals("") || enteredLastName.equals("") || enteredEmail.equals("") || enteredPassword.equals("")) {
+					System.out.println("field left empty");
+					request.setAttribute(REGISTER_ERROR_MESSAGE, "Please enter all fields");
+					target = "/RegistrationPage.jspx";
+					request.getRequestDispatcher(target).forward(request, response);
+				}
+				//all account fields entered
+				else {
+					try {
+						//username is new
+						if(model.checkForUser(enteredUserName) == false) {
+							model.addNewAccount(enteredUserName, enteredFirstName, enteredLastName, enteredEmail, enteredPassword);
+							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, null);
+							request.getSession().setAttribute(ACCOUNT_BEAN, model.retrieveAccountByUsername(enteredUserName, enteredPassword));
+							response.sendRedirect("/PDL_Book_Store/Start");
+						}
+						else {
+							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, "That user name is taken");
+							System.out.println("user already exists");
+							target = "/RegistrationPage.jspx";
+							request.getRequestDispatcher(target).forward(request, response);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				}
+				
+			}
+			else {
+				target = "/RegistrationPage.jspx";
+				request.getRequestDispatcher(target).forward(request, response);
+			}
 		}
 		
 	}
