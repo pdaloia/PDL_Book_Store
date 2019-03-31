@@ -12,16 +12,23 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Create an Account</title>
+<script type="text/javascript" src="res/mc.js">;</script>
 </head>
 <body>
 <form action='' method='POST'>
 
 <div>
 <c:set var="username" value="${accountUserName}"/>
-<table align="right">
+<table align="right" style="width: 50%" >
 	<tr>
 		<td><a href="/PDL_Book_Store/Start">Home</a></td>
-		<td><a href="http://www.google.com">View Shopping Cart</a></td>
+		<td><a style="padding-left: 45px;" href="http://www.google.com">View Shopping Cart</a>
+                     <span style="width: 38px;position: relative; display: block;">
+                                <img src="res/shopping_basket_red.png" style="position: absolute;width: 40px; top: -32px;"  />
+                                <lable style="width: 100%; text-align: center;  z-index: 9999999; position: absolute;   color: #fff; font-weight: bold; top: -10px;" id="cartItemCount"  >${cartCount}</lable>
+                            
+                            </span>
+                </td>
 		<c:if test="${empty accountBean}"><td><a href="/PDL_Book_Store/Login">Login</a></td></c:if>
 		<c:if test="${not empty accountBean}"><td>${accountBean.username}</td></c:if>
 		<c:if test="${empty accountBean}"><td><a href="/PDL_Book_Store/Register">Register</a></td></c:if>
