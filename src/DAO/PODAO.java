@@ -9,7 +9,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-// import bean.CartBean;
+import bean.CartBean;
 import bean.POBean;
 
 public class PODAO {
@@ -24,7 +24,6 @@ public class PODAO {
 		}
 	}
 	
-	/*
 	public String placeOrder(int id, String lname, String fname, int address, ArrayList<CartBean> books) throws SQLException{
 		String msg = "";
 		String status = "";
@@ -49,12 +48,12 @@ public class PODAO {
 			
 			// Add each books in the Cart to POITEM Table.
 			// Needs to be modified. 
-			for (CartBean element: books) {
-				r.executeUpdate("INSERT INTO po " + "VALUES (" + id + ", " + element.bid + ", " + element.price + ")");
-				
-			}
+//			for (CartBean element: books) {
+//				r.executeUpdate("INSERT INTO po " + "VALUES (" + id + ", " + element.bid + ", " + element.price + ")");
+//				
+//			}
 		}
-	
+		
 		//update PO Table
 		poRow++; 
 		p.executeUpdate("insert into po " + "VALUES (" + poRow + ", " + lname + ", " + fname + ", \'" + status + "\', " + address + ")");
@@ -66,7 +65,7 @@ public class PODAO {
 		return msg; 
 	}
 	
-	*/
+	
 	
 	public Map<String, POBean> retrieveAllPOs() throws SQLException{
 		//String query = "select * from students where surname like '%" + namePrefix + "%' and credit_taken >= " + credit_taken;
