@@ -102,7 +102,11 @@ public class model {
 
     }
 
-    
+    public void addNewAccount(String username, String fname, String lname, String email, String password) throws Exception{
+		
+		accountDAO.addNewAccount(username, fname, lname, email, password);
+		
+	}
     
     
     /********** Cart Module from here *****************/
@@ -116,7 +120,7 @@ public class model {
             return new ArrayList<>();
     }
     
-    public void addProductToCart(String bid,String title, String username, int price, int quantity ){
+    public void addProductToCart(String bid,String title, String username,float price, int quantity ){
         CartBean b = this.getCartProductByProductId(bid, username);
         if(null==b){
             cartDAO.addProductToCart(bid, title, username, price, quantity);
