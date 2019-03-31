@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=UTF-8" 
+		pageEncoding="UTF-8" session="true"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
+<link rel="StyleSheet" href="res/mc.css" type="text/css" media="screen, print"/>
+	<script type="text/javascript" src="res/mc.js">;</script>
+<title>Shopping Cart</title>
+</head>
+<body>
+<form action="" method="Post">
+
+<h1>Shopping Cart</h1>
+	<c:set var="book" value="${myCart}"/>
+	
+   		<Table style="width:75%">
+   		<TR>
+   		<td>Quantities </td>
+   	
+   		<td>Items </td>
+   		
+   		<td>Prices</td>
+
+   		</TR>
+   		<tr>
+   		
+   		
+   		</tr>
+   		</Table>
+   		<td><br>subtotal</br></td>
+   		<p>${book.title}</p>
+	<c:set var="book" value="${listOfBooks}"/>
+ 		 <br><input type="submit" value="proceed to checkout" /></br>
+
+
+</form>
+</body>
+</html>
+</jsp:root>
+
