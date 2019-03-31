@@ -1,3 +1,4 @@
+
 DROP TABLE if exists Reviews;
 DROP TABLE if exists VisitEvent;
 DROP TABLE if exists POItem;
@@ -15,12 +16,11 @@ DROP TABLE if exists Cart;
 * category: as specified
 */
 CREATE TABLE Cart (
-username VARCHAR(30) NOT NULL,
+username VARCHAR(100) NOT NULL,
 bid VARCHAR(20) NOT NULL,
 title VARCHAR(60) NOT NULL,
 price INT NOT NULL,
-quantity VARCHAR(5) NOT NULL,
-PRIMARY KEY(bid)
+quantity VARCHAR(5) NOT NULL
 );
 #
 #
