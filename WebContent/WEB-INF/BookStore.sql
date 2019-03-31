@@ -5,6 +5,8 @@ DROP TABLE if exists PO;
 DROP TABLE if exists Address;
 DROP TABLE if exists Book;
 DROP TABLE if exists Accounts;
+DROP TABLE if exists Cart;
+
 
 /** bid: unique identifier of Book (like ISBN)
 * title: title of Book
@@ -12,6 +14,23 @@ DROP TABLE if exists Accounts;
 * author: name of authors
 * category: as specified
 */
+CREATE TABLE Cart (
+username VARCHAR(30) NOT NULL,
+bid VARCHAR(20) NOT NULL,
+title VARCHAR(60) NOT NULL,
+price INT NOT NULL,
+quantity VARCHAR(5) NOT NULL,
+PRIMARY KEY(bid)
+);
+#
+#
+#
+INSERT INTO Cart (username, bid, title, price, quantity) VALUES ('Ammar', 'b001', 'Little Prince', 20, '1');
+INSERT INTO Cart (username, bid, title, price, quantity) VALUES ('Phili', 'b002','Physics', 201, '2');
+INSERT INTO Cart (username, bid, title, price, quantity) VALUES ('Deaoo', 'b003','Mechanics' ,100,'3');
+INSERT INTO Cart (username, bid, title, price, quantity) VALUES ('Khale', 'b004','Mechanics2' ,100,'5');
+INSERT INTO Cart (username, bid, title, price, quantity) VALUES ('saleh', 'b005','Mechanics3' ,100,'4');
+#
 CREATE TABLE Book (
 bid VARCHAR(20) NOT NULL,
 title VARCHAR(60) NOT NULL,
