@@ -11,7 +11,7 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Book Selection</title>
+<title>Create an Account</title>
 <script type="text/javascript" src="res/mc.js">;</script>
 </head>
 <body>
@@ -36,20 +36,36 @@
 	</tr>
 </table>
 </div>
-	
-	<h1>List of Books:</h1>
-	
-	<ul>
-	<c:forEach var="book" items="${listOfBooks}">
-	   <li>
-	   	<a href="/PDL_Book_Store/BookDetails?bookid=${book.key}">${book.value.title}</a>
-	   	<br/>
-	   	Book ID: ${book.key}
-	   </li>
-	</c:forEach>
-	</ul>
-	
-</form>	
+
+<h1>Registration</h1>
+<h3>Fill in all fields</h3>
+
+<table>
+	<tr>
+		<td>User Name:</td>
+		<td><input type="text" name="enteredUserName" id="enteredUserName"/></td>
+	</tr>
+	<tr>
+		<td>First Name:</td>
+		<td><input type="text" name="enteredFirstName" id="enteredFirstName"/></td>
+	</tr>
+	<tr>
+		<td>Last Name:</td>
+		<td><input type="text" name="enteredLastName" id="enteredLastName"/></td>
+	</tr>
+	<tr>
+		<td>Email:</td>
+		<td><input type="text" name="enteredEmail" id="enteredEmail"/></td>
+	</tr>
+	<tr>
+		<td>Password</td>
+		<td><input type="text" name="enteredPassword" id="enteredPassword"/></td>
+	</tr>
+</table>
+
+<input type="submit" name="registerSubmit" id="registerSubmit"/>
+
+</form>
 </body>
 </html>
 </jsp:root>
