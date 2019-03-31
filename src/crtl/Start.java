@@ -210,7 +210,7 @@ public class Start extends HttpServlet {
 				e.printStackTrace();
 			}
 			request.setAttribute(LIST_OF_REVIEWS, currentList);
-			target = "/ShoppingCart.jspx";
+			target = "/BookReviews.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
 		}
 		/*
