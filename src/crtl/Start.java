@@ -15,11 +15,12 @@ import bean.AccountBean;
 import bean.BookBean;
 import bean.ReviewBean;
 import model.model;
+import bean.CartBean;
 
 /**
  * Servlet implementation class Start
  */
-@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout", "/Register"})
+@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout", "/Register", "/ShoppingCart"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -30,6 +31,15 @@ public class Start extends HttpServlet {
 	private static final String LOGIN_ERROR_MESSAGE = "loginErrorMessage";
 	private static final String REGISTER_ERROR_MESSAGE = "registerErrorMessage";
 	
+	private Map<String, BookBean> myCart = new HashMap<String, BookBean>();
+	
+	private int item_list = 0;
+
+	
+	
+	private double subtotal_list = 0.0;
+	
+
 	//account details
 	private AccountBean accountBean;
 	private static final String ACCOUNT_BEAN = "accountBean";
@@ -122,6 +132,28 @@ public class Start extends HttpServlet {
 		 * Display page for viewing a certain books details
 		 */
 		else if(URI.contains("BookDetails")) {
+			//to check if the button is clicked 
+			if (request.getParameter("addToCart") != null) {
+				
+				String bidToSearch;
+				bidToSearch = request.getParameter("bookid");
+				Map<String, BookBean> currentList = new HashMap<String, BookBean>();
+				BookBean b = new BookBean();
+				
+				
+				try {
+					currentList = model.retrieveBooksByBID(bidToSearch);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				b = (BookBean) currentList;
+				//subtotal_list += Double.parseDouble((b.getPrice()));
+				myCart = currentList;
+				request.setAttribute(LIST_OF_BOOKS, currentList.get(request.getParameter("bookid")));
+				target = "/BookStoreMainPage.jspx";
+				request.getRequestDispatcher(target).forward(request, response);
+}
 			if(request.getParameter("submitReview") != null) {
 				if(request.getParameter("submitReview").equals("Submit")) {
 					String bid = request.getParameter("bookid");
@@ -167,6 +199,20 @@ public class Start extends HttpServlet {
 			}
 			request.setAttribute(LIST_OF_REVIEWS, currentList);
 			target = "/BookReviews.jspx";
+			request.getRequestDispatcher(target).forward(request, response);
+		}
+		/*
+		 * Shopping Cart
+		 */
+		
+		else if(URI.contains("ShoppingCart")) {
+		
+			
+			System.out.println(myCart);
+			request.setAttribute(LIST_OF_Cart, myCart);
+			
+			//request.setAttribute("numberofitems", item_list);
+			target = "/ShoppingCart.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
 		}
 		/*
