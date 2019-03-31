@@ -32,6 +32,7 @@ public class model {
 private BookDAO bookDAO;
 private ReviewDAO reviewDAO;
 private AccountDAO accountDAO;
+private CartDAO cartDAO;
 
 	public model(){
 		
@@ -49,6 +50,13 @@ private AccountDAO accountDAO;
 		}
 		try {
 			accountDAO = new AccountDAO();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			cartDAO = new CartDAO();
+			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,5 +119,14 @@ private AccountDAO accountDAO;
 		accountDAO.addNewAccount(username, fname, lname, email, password);
 		
 	}
+	public Map<String, CartBean> retrieveCart() throws Exception{
+		
+		Map<String, CartBean> rc = new HashMap<String, CartBean>();
+		
+		rc = cartDAO.retrieveAllCarts();
+		return rc;
+		
+	}
+	
 
 }
