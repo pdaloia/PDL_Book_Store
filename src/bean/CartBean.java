@@ -2,62 +2,58 @@ package bean;
 
 public class CartBean {
 
-	private String bid;
-	private String title;
-	private String quantity;
-	private String price;
-	private String userName;
-	
-	public CartBean(String userName, String bid, String title, String price, String quantity){
-		this.bid = bid;
-		this.userName = userName;
-		this.title = title;
-		this.quantity = quantity;
-		this.price = price;
-	}
-	
-	
-	
+    private String bid;
+    private String title;
+    private int quantity;
+    private float price;
+    private String userName;
 
-	public String getUserName() {
-		return userName;
-	}
-	
+    public CartBean(String userName, String bid, String title, float price, int quantity) {
+        this.bid = bid;
+        this.userName = userName;
+        this.title = title;
+        this.quantity = quantity;
+        this.price = price;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	
-	public String getBid() {
-		return bid;
-	}
-	
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setBid(String bid) {
-		this.bid = bid;
-	}
-	public String getTitle() {
-		return title;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getBid() {
+        return bid;
+    }
 
-	public String getQuantity() {
-		return quantity;
-	}
+    public void setBid(String bid) {
+        this.bid = bid;
+    }
 
-	public void setQuantity(String quantity) {
-		this.quantity = quantity;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getPrice() {
-		return price;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setPrice(String price) {
-		this.price = price;
-	}
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
 
 }
