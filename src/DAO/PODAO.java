@@ -48,10 +48,10 @@ public class PODAO {
 			
 			// Add each books in the Cart to POITEM Table.
 			// Needs to be modified. 
-//			for (CartBean element: books) {
-//				r.executeUpdate("INSERT INTO po " + "VALUES (" + id + ", " + element.bid + ", " + element.price + ")");
-//				
-//			}
+			for (CartBean element: books) {
+				p.executeUpdate("INSERT INTO po " + "VALUES (" + id + ", " + element.getBid() + ", " + element.getPrice() + ")");
+				
+			}
 		}
 		
 		//update PO Table

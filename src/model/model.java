@@ -116,7 +116,7 @@ public class model {
             return new ArrayList<>();
     }
     
-    public void addProductToCart(String bid,String title, String username,float price, int quantity ){
+    public void addProductToCart(String bid,String title, String username, int price, int quantity ){
         CartBean b = this.getCartProductByProductId(bid, username);
         if(null==b){
             cartDAO.addProductToCart(bid, title, username, price, quantity);

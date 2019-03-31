@@ -5,10 +5,10 @@ public class CartBean {
     private String bid;
     private String title;
     private int quantity;
-    private float price;
+    private int price;
     private String userName;
 
-    public CartBean(String userName, String bid, String title, float price, int quantity) {
+    public CartBean(String userName, String bid, String title, int price, int quantity) {
         this.bid = bid;
         this.userName = userName;
         this.title = title;
@@ -52,7 +52,7 @@ public class CartBean {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
