@@ -13,14 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.AccountBean;
 import bean.BookBean;
-import bean.ReviewBean;
-import model.model;
 import bean.CartBean;
+import bean.ReviewBean;
+import java.util.List;
+import model.model;
 
 /**
  * Servlet implementation class Start
  */
-@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout", "/Register", "/ShoppingCart"})
+@WebServlet({"/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout", "/ShoppingCart"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -29,8 +30,7 @@ public class Start extends HttpServlet {
 	private static final String LIST_OF_BOOKS = "listOfBooks";
 	private static final String LIST_OF_REVIEWS = "listOfReviews";
 	private static final String LOGIN_ERROR_MESSAGE = "loginErrorMessage";
-	private static final String REGISTER_ERROR_MESSAGE = "registerErrorMessage";
-	
+	private static final String LIST_OF_Cart = "listOfCart";
 	private Map<String, BookBean> myCart = new HashMap<String, BookBean>();
 	
 	private int item_list = 0;
@@ -68,11 +68,28 @@ public class Start extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		System.out.println("Servlet started");
+                
 		
 		//get values from URL
 		String url = this.getServletContext().getContextPath();
 		String URI = request.getRequestURI();
 		String queryString = request.getQueryString();
+               Object u = request.getSession().getAttribute("sessionUsername");
+                if (null == u) {
+                    u = request.getSession().getId();
+                }
+
+                final String username = String.valueOf(u);
+                String countLabel = "";
+                int cartCount = model.countCartItem(username);
+                if(cartCount>0){
+                    if(cartCount>99){
+                        countLabel="99+";
+                    }else{
+                        countLabel=cartCount+"";
+                    }
+                }
+                request.setAttribute("cartCount", countLabel);
 		
 		//Main page
 		if(URI.contains("Start") && request.getParameter("textSearchButton") == null) {
@@ -132,7 +149,7 @@ public class Start extends HttpServlet {
 		 * Display page for viewing a certain books details
 		 */
 		else if(URI.contains("BookDetails")) {
-			//to check if the button is clicked 
+				//to check if the button is clicked 
 			if (request.getParameter("addToCart") != null) {
 				
 				String bidToSearch;
@@ -154,12 +171,19 @@ public class Start extends HttpServlet {
 				target = "/BookStoreMainPage.jspx";
 				request.getRequestDispatcher(target).forward(request, response);
 }
+				
+		
+//				
+			
+			
+			
+			
+			
 			if(request.getParameter("submitReview") != null) {
 				if(request.getParameter("submitReview").equals("Submit")) {
 					String bid = request.getParameter("bookid");
 					String review = request.getParameter("reviewText");
-					accountBean = (AccountBean) request.getSession().getAttribute(ACCOUNT_BEAN);
-					String email = accountBean.getEmail();
+					String email = request.getParameter("reviewEmail");
 					int rating = Integer.parseInt(request.getParameter("reviewRating"));
 					try {
 						model.addReview(bid, review, email, rating);
@@ -183,9 +207,10 @@ public class Start extends HttpServlet {
 			request.getRequestDispatcher(target).forward(request, response);
 			
 		}
-		/*
-		 * Seeing all reviews for a book
+		/*Seeing all reviews for a book
+		 * 
 		 */
+		
 		else if(URI.contains("Reviews")) {
 			String bidToSearch;
 			bidToSearch = request.getParameter("bookid");
@@ -198,7 +223,7 @@ public class Start extends HttpServlet {
 				e.printStackTrace();
 			}
 			request.setAttribute(LIST_OF_REVIEWS, currentList);
-			target = "/BookReviews.jspx";
+			target = "/ShoppingCart.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
 		}
 		/*
@@ -206,13 +231,54 @@ public class Start extends HttpServlet {
 		 */
 		
 		else if(URI.contains("ShoppingCart")) {
-		
-			
-			System.out.println(myCart);
-			request.setAttribute(LIST_OF_Cart, myCart);
-			
-			//request.setAttribute("numberofitems", item_list);
-			target = "/ShoppingCart.jspx";
+                        
+                        if(request.getMethod().equals("POST")){
+                            if(request.getParameter("action")!=null){
+                                
+                                String action = request.getParameter("action");
+                                if(action.equals("remove")){
+                                    model.removeItemFromCart(request.getParameter("bid").trim(), request.getParameter("username").trim());
+                                    response.getOutputStream().write("{\"error\":false}".getBytes());
+                                    return;
+                                }else if(action.equals("update")){
+                                
+                                    String[] values = request.getParameterValues("item");
+                                    for(String s:values){
+                                        
+                                        String tmp[] = s.split(",");
+                                        float unitPrice = new Float(tmp[3].trim());
+                                        int totalQuan = new Integer(tmp[0].trim());
+                                        String user = tmp[2].trim();
+                                        String bid = tmp[1].trim();
+                                        
+                                        model.updateCartProduct(bid, user, (unitPrice*totalQuan), totalQuan);
+                                        
+                                        
+                                        
+                                    }
+                                    response.getOutputStream().write("{\"error\":false}".getBytes());
+                                        return;
+                                    
+                                    
+                                }
+                                
+                            
+                            }else{
+                                model.addProductToCart(request.getParameter("bid"), request.getParameter("title"), username, new Integer(request.getParameter("price").trim()), 1);
+                            }
+                            
+                            
+                        }
+                    
+                        List<CartBean> cartList  = model.retrieveUserCart(username);
+                        request.setAttribute("userCart", cartList);
+                        request.setAttribute("cartLen", cartList.size());
+                        float totalPrice =0;
+                        for(CartBean bean:cartList){
+                            totalPrice+=bean.getPrice();
+                        }
+                        request.setAttribute("totalPrice", totalPrice);
+                        target = "/ShoppingCart.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
 		}
 		/*
@@ -228,8 +294,11 @@ public class Start extends HttpServlet {
 						if(model.retrieveAccountByUsername(loggedInUserName, loggedInPassword) != null) {
 							accountBean = model.retrieveAccountByUsername(loggedInUserName, loggedInPassword);
 							request.getSession().setAttribute(LOGIN_ERROR_MESSAGE, null);
-							request.getSession().setAttribute(ACCOUNT_BEAN, accountBean);
-							response.sendRedirect("/PDL_Book_Store/Start");
+                                                        request.getSession().setAttribute("sessionUsername",loggedInUserName);
+                                                        request.getSession().setAttribute("accountBean", accountBean);
+                                                        response.sendRedirect("/PDL_Book_Store/Start");
+                                                       
+                                                        
 						}
 						else {
 							request.getSession().setAttribute(LOGIN_ERROR_MESSAGE, "Not a valid login, try again.");
@@ -240,6 +309,8 @@ public class Start extends HttpServlet {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					
+					request.getSession().setAttribute(ACCOUNT_BEAN, accountBean);
 					
 				}
 				
@@ -254,55 +325,13 @@ public class Start extends HttpServlet {
 		 * logout page
 		 */
 		else if (URI.contains("Logout")) {
+			
 			request.getSession().setAttribute(ACCOUNT_BEAN, null);
 			System.out.println(request.getSession().getAttribute(ACCOUNT_BEAN));
 			
 			target = "/LogoutPage.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
-		}
-		/*
-		 * Registration page
-		 */
-		else if(URI.contains("Register")) {
-			String enteredUserName = request.getParameter("enteredUserName");
-			String enteredFirstName = request.getParameter("enteredFirstName");
-			String enteredLastName = request.getParameter("enteredLastName");
-			String enteredEmail = request.getParameter("enteredEmail");
-			String enteredPassword = request.getParameter("enteredPassword");
-			if(request.getParameter("registerSubmit") != null) {
-				if(enteredUserName.equals("") || enteredFirstName.equals("") || enteredLastName.equals("") || enteredEmail.equals("") || enteredPassword.equals("")) {
-					System.out.println("field left empty");
-					request.setAttribute(REGISTER_ERROR_MESSAGE, "Please enter all fields");
-					target = "/RegistrationPage.jspx";
-					request.getRequestDispatcher(target).forward(request, response);
-				}
-				//all account fields entered
-				else {
-					try {
-						//username is new
-						if(model.checkForUser(enteredUserName) == false) {
-							model.addNewAccount(enteredUserName, enteredFirstName, enteredLastName, enteredEmail, enteredPassword);
-							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, null);
-							request.getSession().setAttribute(ACCOUNT_BEAN, model.retrieveAccountByUsername(enteredUserName, enteredPassword));
-							response.sendRedirect("/PDL_Book_Store/Start");
-						}
-						else {
-							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, "That user name is taken");
-							System.out.println("user already exists");
-							target = "/RegistrationPage.jspx";
-							request.getRequestDispatcher(target).forward(request, response);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-				}
-				
-			}
-			else {
-				target = "/RegistrationPage.jspx";
-				request.getRequestDispatcher(target).forward(request, response);
-			}
+			
 		}
 		
 	}
