@@ -2,7 +2,7 @@ package bean;
 
 public class AddressBean {
 	
-	private String id;
+	private int id;
 	private String street;
 	private String province;
 	private String country;
@@ -14,7 +14,7 @@ public class AddressBean {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AddressBean(String id, String street, String province, String country, String zip, String phone) {
+	public AddressBean(int id, String street, String province, String country, String zip, String phone) {
 		super();
 		this.id = id;
 		this.street = street;
@@ -24,11 +24,11 @@ public class AddressBean {
 		this.phone = phone;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
