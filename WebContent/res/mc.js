@@ -8,6 +8,7 @@
 
 
 
+
 // shopping cart module starts here
 
 function postData(params, callback) {
@@ -43,10 +44,7 @@ function removeItem(bid, username) {
         });
 
     }
-
-
 }
-
 
 function updateChanges(){
     var query = "";
@@ -58,7 +56,7 @@ function updateChanges(){
         if(!realVal ||  realVal<1){
             alert('Invalid quantiy');
             return ;
-        }
+        }s
         var val = elm.getAttribute('data-val');
         query+="item="+realVal+","+val+"&";
         
@@ -67,7 +65,6 @@ function updateChanges(){
     query+="action=update";
     postData(query,function(status,text){
         if(status===200){
-            
             window.location=window.location;
             
         }else{
@@ -115,3 +112,19 @@ function addItemToCart(bid, title,price){
 }
 
 // shopping cart module ends here
+
+
+// payment module starts here
+ 
+function newCustomer() {
+	var checkBox = document.getElementById("newCheckBox");
+	var text = document.getElementById("newCustomerOrder");
+	if (checkBox.checked == true) {
+		text.style.display = "block";
+	} else {
+		text.style.display = "none";
+	}
+}
+
+
+//payment module ends here
