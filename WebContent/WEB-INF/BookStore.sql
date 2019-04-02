@@ -3,9 +3,9 @@ DROP TABLE if exists Reviews;
 DROP TABLE if exists VisitEvent;
 DROP TABLE if exists POItem;
 DROP TABLE if exists PO;
+DROP TABLE if exists Accounts;
 DROP TABLE if exists Address;
 DROP TABLE if exists Book;
-DROP TABLE if exists Accounts;
 DROP TABLE if exists Cart;
 
 
@@ -147,14 +147,16 @@ fname varchar(30) NOT NULL,
 lname varchar(30) NOT NULL,
 email varchar(100) NOT NULL,
 password varchar(100) NOT NULL,
-PRIMARY KEY(username)
+addressID INT UNSIGNED,
+PRIMARY KEY(username),
+FOREIGN KEY (addressID) REFERENCES Address(id)
 );
 #
 # Dumping data for table 'Accounts'
 #
-INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('phild', 'Philip', 'Daloia', 'philip@gmail.com', '1234');
-INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('ammar', 'Ammar', 'Halawani', 'ammar@gmail.com', '1234');
-INSERT INTO Accounts (username, fname, lname, email, password) VALUES ('daelee', 'Dae', 'Lee', 'dae@gmail.com', '1234');
+INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('phild', 'Philip', 'Daloia', 'philip@gmail.com', '1234',1);
+INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('ammar', 'Ammar', 'Halawani', 'ammar@gmail.com', '1234',2);
+INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('daelee', 'Dae', 'Lee', 'dae@gmail.com', '1234',3);
 #
 #
 /* book reviews

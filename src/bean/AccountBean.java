@@ -7,19 +7,22 @@ public class AccountBean {
 	private String lname;
 	private String email;
 	private String password;
+	private Integer addressId;
 	
 	public AccountBean() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public AccountBean(String username, String fname, String lname, String email, String password) {
+	public AccountBean(String username, String fname, String lname, String email, String password, Integer addressId) {
 		super();
 		this.username = username;
 		this.fname = fname;
 		this.lname = lname;
 		this.email = email;
 		this.password = password;
+		this.addressId = addressId;
+	
 	}
 
 	public String getUsername() {
@@ -60,6 +63,14 @@ public class AccountBean {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public Integer getAddressId() {
+		return addressId;
+	}
+
+	public void setAddressId(Integer addressId) {
+		this.addressId = addressId;
 	}
 
 }

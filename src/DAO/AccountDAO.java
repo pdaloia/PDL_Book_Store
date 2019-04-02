@@ -36,8 +36,9 @@ public class AccountDAO {
 			String lname = r.getString("LNAME");
 			String email = r.getString("EMAIL");
 			String password = r.getString("PASSWORD");
+			int addressId = r.getInt("ADDRESSID");
 			AccountBean current;
-			current = new AccountBean(username, fname, lname, email, password);
+			current = new AccountBean(username, fname, lname, email, password, addressId);
 			rv.put(username, current);
 			
 		}
@@ -94,8 +95,9 @@ public class AccountDAO {
 			String lname = r.getString("LNAME");
 			String email = r.getString("EMAIL");
 			String password = r.getString("PASSWORD");
+			int addressId = r.getInt("ADDRESSID");
 			AccountBean current;
-			current = new AccountBean(username, fname, lname, email, password);
+			current = new AccountBean(username, fname, lname, email, password,addressId);
 			rv.put(username, current);
 			
 		}
@@ -107,7 +109,7 @@ public class AccountDAO {
 		return rv.get(givenUsername);
 	}
 	
-	public void addNewAccount(String username, String fname, String lname, String email, String password) throws SQLException{
+	public void addNewAccount(String username, String fname, String lname, String email, String password, Integer addressId) throws SQLException{
 		
 		String query = "INSERT INTO accounts (username, fname, lname, email, password) VALUES ('" + username + "', '" + fname + "', '" + lname + "', '" + email + "', '" + password + "')";
 		Connection con = this.ds.getConnection();
