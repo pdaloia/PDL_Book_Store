@@ -2,13 +2,17 @@ package model;
 
 import java.util.HashMap;
 import bean.AccountBean;
+import bean.AddressBean;
 import bean.BookBean;
 import bean.CartBean;
 import bean.ReviewBean;
 import DAO.BookDAO;
 import DAO.CartDAO;
+import DAO.PODAO;
 import DAO.ReviewDAO;
 import DAO.AccountDAO;
+import DAO.AddressDAO;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +21,21 @@ import java.util.Map;
 
 public class model {
 
+	private AddressDAO addressDAO;
     private BookDAO bookDAO;
     private ReviewDAO reviewDAO;
     private AccountDAO accountDAO;
     private CartDAO cartDAO;
+    private PODAO poDAO;
 
     public model() {
 
+        try {
+        	addressDAO = new AddressDAO();
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         try {
             bookDAO = new BookDAO();
         } catch (ClassNotFoundException e) {
@@ -43,14 +55,31 @@ public class model {
             e.printStackTrace();
         }
         try {
+        	poDAO = new PODAO();
+
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
             cartDAO = new CartDAO();
 
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+      
 
     }
+    
+    /****************** Address Module from here *****************/
+    
+    public AddressBean retrieveAddressById(int id) throws Exception {
+    	 return addressDAO.retrieveAddressById(id);
+    }
+
+    
+    /****************** Books Module from here *****************/
 
     public Map<String, BookBean> retrieveBooksByCategory(String categoryToSearch) throws Exception {
 
@@ -75,6 +104,8 @@ public class model {
         return rv;
 
     }
+    
+    /****************** Review Module from here *****************/
 
     public Map<String, ReviewBean> retrieveReviewsByBID(String searchBID) throws Exception {
 
@@ -89,6 +120,9 @@ public class model {
         reviewDAO.addReview(bid, review, email, rating);
 
     }
+    
+    /****************** Account Module from here *****************/
+    
 
     public boolean checkForUser(String givenUsername) throws Exception {
 
@@ -102,14 +136,14 @@ public class model {
 
     }
 
-    public void addNewAccount(String username, String fname, String lname, String email, String password) throws Exception{
+    public void addNewAccount(String username, String fname, String lname, String email, String password, Integer addressId) throws Exception{
 		
-		accountDAO.addNewAccount(username, fname, lname, email, password);
+		accountDAO.addNewAccount(username, fname, lname, email, password, addressId);
 		
 	}
     
     
-    /********** Cart Module from here *****************/
+    /****************** Cart Module from here *****************/
     
     public List<CartBean> retrieveUserCart(String username) {
             try{
@@ -120,7 +154,7 @@ public class model {
             return new ArrayList<>();
     }
     
-    public void addProductToCart(String bid,String title, String username,float price, int quantity ){
+    public void addProductToCart(String bid,String title, String username,int price, int quantity ){
         CartBean b = this.getCartProductByProductId(bid, username);
         if(null==b){
             cartDAO.addProductToCart(bid, title, username, price, quantity);
@@ -147,4 +181,16 @@ public class model {
         
        return cartDAO.countCartItem(username);
     }
+    
+    
+    
+    /****************** Payment Module from here *****************/
+    
+    public String placeOrder(int id, String lname, String fname, int address, ArrayList<CartBean> books) throws Exception
+    {
+    	String msg = poDAO.placeOrder(id, lname, fname, address, books);
+    	return msg;
+    }
+    
+    
 }

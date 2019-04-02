@@ -88,7 +88,7 @@ public class TestAccountDAO extends HttpServlet {
 		
 		try {
 			if(accountDAO.checkForUser("pgfds") == false) {
-				accountDAO.addNewAccount("pgfds", "bfd", "bfdbf", "p@fbdbd", "bfdfdb");
+				accountDAO.addNewAccount("pgfds", "bfd", "bfdbf", "p@fbdbd", "bfdfdb",null);
 				System.out.println("user added");
 			}
 			else {
