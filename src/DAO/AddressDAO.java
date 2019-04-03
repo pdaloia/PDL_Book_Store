@@ -77,5 +77,31 @@ public class AddressDAO {
 		
 		return rv;
 	}
+	
+
+	public int addNewAddress(String street, String province, String country, String zip, String phone) throws SQLException{
+		
+		
+		String query = "select count(*) from Address";
+		Connection con = this.ds.getConnection();
+		PreparedStatement p = con.prepareStatement(query);
+		ResultSet r = p.executeQuery();
+		
+		r.next();
+		int row = r.getInt(1);	// get the number of rows in the address
+		row++;
+			
+		// add new address into table 
+		query = "INSERT INTO Address VALUES ("+ row +", '" + street + "', '" + province + "', '" + country + "', '" + zip + "','" +  phone + "')";
+		
+		p.executeUpdate(query);
+
+		r.close();
+		p.close();
+		con.close();
+		
+		return row; 
+		
+	}
 
 }
