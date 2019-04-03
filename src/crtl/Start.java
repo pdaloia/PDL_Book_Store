@@ -162,27 +162,25 @@ public class Start extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				b = (BookBean) currentList;
+				b = currentList.get(bidToSearch);
 				// subtotal_list += Double.parseDouble((b.getPrice()));
 				myCart = currentList;
 				request.setAttribute(LIST_OF_BOOKS, currentList.get(request.getParameter("bookid")));
-				target = "/BookStoreMainPage.jspx";
-				request.getRequestDispatcher(target).forward(request, response);
 			}
 			
 			if (request.getParameter("submitReview") != null) {
-				if (request.getParameter("submitReview").equals("Submit")) {
-					String bid = request.getParameter("bookid");
-					String review = request.getParameter("reviewText");
-					String email = request.getParameter("reviewEmail");
-					int rating = Integer.parseInt(request.getParameter("reviewRating"));
-					try {
-						model.addReview(bid, review, email, rating);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
+				String bid = request.getParameter("bookid");
+				String review = request.getParameter("reviewText");
+				String email = currentUser.getEmail();
+				int rating = Integer.parseInt(request.getParameter("reviewRating"));
+				try {
+					model.addReview(bid, review, email, rating);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+
 			}
 			String bidToSearch;
 			bidToSearch = request.getParameter("bookid");
@@ -368,8 +366,7 @@ public class Start extends HttpServlet {
 		
 		/*
 		 * Payment
-		 
-		 * Todo 1: not forwarding to right page
+		 * 
 		 * Todo 2: check the form on jspx page 
 		 */
 		
@@ -404,13 +401,19 @@ public class Start extends HttpServlet {
 							String differentZip = request.getParameter("differentZip");
 							String differentPhone = request.getParameter("differentPhone");
 							
-							// Place an order 
+							// Place an order and delete books from cart
 							try {
+								// add different address to the table. 
 								int addressId = 0;
 								addressId = model.addNewAddress(differentStreet, differentProvince, differentCountry, differentZip, differentPhone);
 								List<CartBean> cartList = model.retrieveUserCart(username);
 								String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
 								request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+								
+								// delete books from cart
+								for (CartBean book: cartList) {
+									model.removeItemFromCart(book.getBid(), username);
+								}
 								
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -433,6 +436,11 @@ public class Start extends HttpServlet {
 								List<CartBean> cartList = model.retrieveUserCart(username);
 								String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
 								request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+								
+								// delete books from cart
+								for (CartBean book: cartList) {
+									model.removeItemFromCart(book.getBid(), username);
+								}
 								
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -461,6 +469,11 @@ public class Start extends HttpServlet {
 							List<CartBean> cartList = model.retrieveUserCart(username);
 							String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
 							request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+							
+							// delete books from cart
+							for (CartBean book: cartList) {
+								model.removeItemFromCart(book.getBid(), username);
+							}
 							
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
@@ -546,6 +559,11 @@ public class Start extends HttpServlet {
 					String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
 					request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
 					
+					// delete books from cart
+					for (CartBean book: cartList) {
+						model.removeItemFromCart(book.getBid(), username);
+					}
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -555,7 +573,6 @@ public class Start extends HttpServlet {
 			}
 			System.out.println("now forwarding to ..." + target);
 			request.getRequestDispatcher(target).forward(request, response);
-
 		}
 
 	}

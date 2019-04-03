@@ -22,7 +22,7 @@
 			<table align="right" style="width: 50%">
 				<tr>
 					<td><a href="/PDL_Book_Store/Start">Home</a></td>
-					<td><a href="http://www.google.com"
+					<td><a href="/PDL_Book_Store/ShoppingCart"
 						style="padding-left: 45px;">View Shopping Cart</a> <span
 						style="width: 38px; position: relative; display: block;"> <img
 							src="images/shopping_basket_red.png"

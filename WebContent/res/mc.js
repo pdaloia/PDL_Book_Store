@@ -56,7 +56,7 @@ function updateChanges(){
         if(!realVal ||  realVal<1){
             alert('Invalid quantiy');
             return ;
-        }s
+        }
         var val = elm.getAttribute('data-val');
         query+="item="+realVal+","+val+"&";
         

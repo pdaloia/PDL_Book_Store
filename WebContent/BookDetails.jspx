@@ -15,7 +15,7 @@
 <script type="text/javascript" src="res/mc.js">;</script>
 </head>
 <body>
-	<form action="/ShoppingCart" method="POST" onsubmit="{return false;}">
+	<form action='' method="POST" >
 
 		<div>
 			<c:set var="username" value="${accountUserName}" />
@@ -55,9 +55,8 @@
 		<p>${book.price}</p>
 		<input type="submit" value='Add to Cart' name='addToCart'
 			onclick="{ addItemToCart( '${book.bid}','${book.title}','${book.price}' ); }"
-			id='addToCart' /> <br /> <br /> <a
-			href="/PDL_Book_Store/Reviews?bookid=${book.bid}">See reviews for
-			this book</a> <br />
+			id='addToCart' /> <br /> <br /> 
+			<a href="/PDL_Book_Store/Reviews?bookid=${book.bid}">See reviews for this book</a> <br />
 
 		<c:if test="${not empty accountBean}">
 			<h3>Leave a Review:</h3>

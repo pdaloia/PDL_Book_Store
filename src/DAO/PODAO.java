@@ -49,34 +49,19 @@ public class PODAO {
 			msg = "Order Successfully Completed.";
 			System.out.println(msg);
 			status = "ORDERED";
-			PreparedStatement p2 = con.prepareStatement("select username from Accounts where lname=? and fname=?");
-			p2.setString(1, lname);
-			p2.setString(2, fname);
-			r = p2.executeQuery();
-			r.next();
-			String username =  r.getString("username");
+			
 			
 			// update PO Table
 			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', \'" + address + "\')");
 
-			// Add each book in the Cart to POITEM Table and delete it.
-			PreparedStatement p3 = null;
+			// Add each book in the Cart to POITEM Table.
 			for (CartBean element: books) {
 				// Add
 				p1.executeUpdate("insert into POItem " + "VALUES (" + poRow + ", \'" + element.getBid() + "\', " + element.getPrice() + ")");
 				
-				// Delete
-				p3 = con.prepareStatement("DELETE from cart where bid=? and username=\'"+ username + "\'");
-				p3.setString(1, element.getBid());
-				p3.executeUpdate();
 			}
-			p2.close();
-			p3.close();
 		}
 		
-	
-		
-
 		r.close();
 		p1.close();
 		con.close();
