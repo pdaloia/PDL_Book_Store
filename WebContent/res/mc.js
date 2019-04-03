@@ -47,6 +47,7 @@ function removeItem(bid, username) {
 }
 
 function updateChanges(){
+	console.log("test");
     var query = "";
     var quantities = document.querySelectorAll(".itemQuantity");
     for(var i=0;i<quantities.length;i++){
