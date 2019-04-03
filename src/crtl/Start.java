@@ -2,6 +2,7 @@ package crtl;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.AccountBean;
+import bean.AddressBean;
 import bean.BookBean;
 import bean.CartBean;
 import bean.ReviewBean;
@@ -22,7 +24,7 @@ import model.model;
  * Servlet implementation class Start
  */
 @WebServlet({ "/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout", "/Register",
-		"/ShoppingCart" })
+		"/ShoppingCart", "/Payment" })
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -39,9 +41,12 @@ public class Start extends HttpServlet {
 	private double subtotal_list = 0.0;
 
 	// account details
-	private AccountBean accountBean;
+	private AccountBean currentUser;
+	private AddressBean currentAddress;
 	private static final String ACCOUNT_BEAN = "accountBean";
-
+	private static final String ADDRESS_BEAN = "addressBean";
+	private static final String SESSION_USER_NAME = "sessionUsername";
+	private static final String PAYMENT_RESULT_MESSAGE = "paymentResultMessage";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -67,13 +72,13 @@ public class Start extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		System.out.println("Servlet started");
+		// System.out.println("Servlet started");
 
 		// get values from URL
 		String url = this.getServletContext().getContextPath();
 		String URI = request.getRequestURI();
 		String queryString = request.getQueryString();
-		Object u = request.getSession().getAttribute("sessionUsername");
+		Object u = request.getSession().getAttribute(SESSION_USER_NAME);
 		if (null == u) {
 			u = request.getSession().getId();
 		}
@@ -223,6 +228,7 @@ public class Start extends HttpServlet {
 			String enteredEmail = request.getParameter("enteredEmail");
 			String enteredPassword = request.getParameter("enteredPassword");
 			if (request.getParameter("registerSubmit") != null) {
+				// check the validity with javascript. 
 				if (enteredUserName.equals("") || enteredFirstName.equals("") || enteredLastName.equals("")
 						|| enteredEmail.equals("") || enteredPassword.equals("")) {
 					System.out.println("field left empty");
@@ -236,7 +242,7 @@ public class Start extends HttpServlet {
 						// username is new
 						if (model.checkForUser(enteredUserName) == false) {
 							model.addNewAccount(enteredUserName, enteredFirstName, enteredLastName, enteredEmail,
-									enteredPassword);
+									enteredPassword, null);
 							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, null);
 							request.getSession().setAttribute(ACCOUNT_BEAN,
 									model.retrieveAccountByUsername(enteredUserName, enteredPassword));
@@ -262,18 +268,20 @@ public class Start extends HttpServlet {
 		 * login page
 		 */
 		else if (URI.contains("Login")) {
-
 			if (request.getParameter("loginSubmit") != null) {
 				if (request.getParameter("loginSubmit").equals("Submit")) {
 					String loggedInUserName = request.getParameter("givenUserName");
 					String loggedInPassword = request.getParameter("givenPassword");
 					try {
 						if (model.retrieveAccountByUsername(loggedInUserName, loggedInPassword) != null) {
-							accountBean = model.retrieveAccountByUsername(loggedInUserName, loggedInPassword);
+							currentUser = model.retrieveAccountByUsername(loggedInUserName, loggedInPassword);
 							request.getSession().setAttribute(LOGIN_ERROR_MESSAGE, null);
-							request.getSession().setAttribute("sessionUsername", loggedInUserName);
-							request.getSession().setAttribute("accountBean", accountBean);
-							response.sendRedirect("/PDL_Book_Store/Start");
+							request.getSession().setAttribute(SESSION_USER_NAME, loggedInUserName);
+							request.getSession().setAttribute(ACCOUNT_BEAN, currentUser);
+							if (request.getParameter("state") != null) {
+								response.sendRedirect("/PDL_Book_Store/Payment");
+							}
+							else response.sendRedirect("/PDL_Book_Store/Start");
 
 						} else {
 							request.getSession().setAttribute(LOGIN_ERROR_MESSAGE, "Not a valid login, try again.");
@@ -284,8 +292,6 @@ public class Start extends HttpServlet {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-
-					//request.getSession().setAttribute(ACCOUNT_BEAN, accountBean);
 
 				}
 
@@ -315,7 +321,8 @@ public class Start extends HttpServlet {
 
 			if (request.getMethod().equals("POST")) {
 				if (request.getParameter("action") != null) {
-
+					// modification request
+					// use currentUser (accountBean object) instead of request.getParameter("username")
 					String action = request.getParameter("action");
 					if (action.equals("remove")) {
 						model.removeItemFromCart(request.getParameter("bid").trim(),
@@ -350,13 +357,205 @@ public class Start extends HttpServlet {
 			List<CartBean> cartList = model.retrieveUserCart(username);
 			request.setAttribute("userCart", cartList);
 			request.setAttribute("cartLen", cartList.size());
-			float totalPrice = 0;
+			int totalPrice = 0;
 			for (CartBean bean : cartList) {
 				totalPrice += bean.getPrice();
 			}
 			request.setAttribute("totalPrice", totalPrice);
 			target = "/ShoppingCart.jspx";
 			request.getRequestDispatcher(target).forward(request, response);
+		}
+		
+		/*
+		 * Payment
+		 
+		 * Todo 1: not forwarding to right page
+		 * Todo 2: check the form on jspx page 
+		 */
+		
+		else if (URI.contains("Payment")) {
+			// 1. check if user has logged in
+			target = "/Payment.jspx";
+			if(currentUser != null) {
+				// a. check if address has been saved into this account
+				Integer id = currentUser.getAddressId();
+				if(id != null) {
+					try {
+						currentAddress = model.retrieveAddressById(id);
+						request.getSession().setAttribute(ADDRESS_BEAN, currentAddress);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				// b. check if order has been placed. 
+				if(request.getParameter("confirmOrder1") != null) {
+					String cardLastName = request.getParameter("cardLastName");
+					String cardFirstName = request.getParameter("cardFirstName");
+					// b1. check if current user has existing address. 
+					if(id != null) {
+						// b-1a. check if the user has requested the different address. 
+						// 	  check the validity with javascript. 
+						if(request.getParameter("differentStreet")!=null) {
+							// Get different address
+							String differentStreet = request.getParameter("differentStreet");
+							String differentProvince = request.getParameter("differentProvince");
+							String differentCountry = request.getParameter("differentCountry");
+							String differentZip = request.getParameter("differentZip");
+							String differentPhone = request.getParameter("differentPhone");
+							
+							// Place an order 
+							try {
+								int addressId = 0;
+								addressId = model.addNewAddress(differentStreet, differentProvince, differentCountry, differentZip, differentPhone);
+								List<CartBean> cartList = model.retrieveUserCart(username);
+								String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
+								request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+								
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							target = "/OrderResult.jspx";
+
+							
+							// Initialize the form variables 
+							request.getSession().setAttribute("differentStreet", null);
+							request.getSession().setAttribute("differentProvince", null);
+							request.getSession().setAttribute("differentCountry", null);
+							request.getSession().setAttribute("differentZip", null);
+							request.getSession().setAttribute("differentPhone", null);
+						}
+						// b-1b. order with existing address  
+						else {
+							try {
+								int addressId = currentUser.getAddressId();
+								List<CartBean> cartList = model.retrieveUserCart(username);
+								String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
+								request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+								
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							target = "/OrderResult.jspx";
+						}	
+						
+					}
+					// b-2. current user has no existing address.
+					else {
+						// Get new address
+						String newStreet = request.getParameter("newStreet");
+						String newProvince = request.getParameter("newProvince");
+						String newCountry = request.getParameter("newCountry");
+						String newZip = request.getParameter("newZip");
+						String newPhone = request.getParameter("newPhone");
+						// Place an order 
+						try {
+							// Add new address and save it into the current user
+							int addressId = 0;
+							addressId = model.addNewAddress(newStreet, newProvince, newCountry, newZip, newPhone);
+							currentUser.setAddressId(addressId);
+							
+							// Add cart items and place an order
+							List<CartBean> cartList = model.retrieveUserCart(username);
+							String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
+							request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+							
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						target = "/OrderResult.jspx";
+						
+						// initialize form variables
+						request.getSession().setAttribute("newStreet", null);
+						request.getSession().setAttribute("newProvince", null);
+						request.getSession().setAttribute("newCountry", null);
+						request.getSession().setAttribute("newZip", null);
+						request.getSession().setAttribute("newPhone", null);
+					}	
+					
+				}
+			}
+			
+			// 2. New Customer placing the first order
+			// 	  Save account and address information
+			else if(request.getParameter("confirmOrder2")!=null) {
+				// Get address information
+				int addressId = 0;
+				String street = request.getParameter("street");
+				String province = request.getParameter("province");
+				String country = request.getParameter("country");
+				String zip = request.getParameter("zip");
+				String phone = request.getParameter("phone");
+				
+				// Get account information 
+				String newCstmrAccount = request.getParameter("newCstmrAccount");
+				String cardLastName = request.getParameter("cardLastName");
+				String cardFirstName = request.getParameter("cardFirstName");
+				String newCstmrEmail = request.getParameter("newCstmrEmail");
+				String newCstmrPassword = request.getParameter("newCstmrPassword");
+				
+	
+				
+				// Add address information
+				// Check the validity with javascript. 
+				if (street.equals("") || province.equals("") || country.equals("")
+						|| zip.equals("") || phone.equals("")) {
+					System.out.println("field left empty (Address Information)");
+					request.setAttribute(REGISTER_ERROR_MESSAGE, "Please enter all fields for Address Information");
+				}
+				else {
+					try {
+						addressId = model.addNewAddress(street, province, country, zip, phone);
+						System.out.println("Address has been succesfully added");
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				// Add account information
+				if (newCstmrAccount.equals("") || newCstmrEmail.equals("") || newCstmrPassword.equals("")
+						|| cardFirstName.equals("") || cardLastName.equals("")) {
+					System.out.println("field left empty (Account Information)");
+					request.setAttribute(REGISTER_ERROR_MESSAGE, "Please enter all fields for Account Information");
+				}
+				else {		
+					try {
+						if (model.checkForUser(newCstmrAccount) == false) {
+							model.addNewAccount(newCstmrAccount, cardFirstName, cardLastName, newCstmrEmail, newCstmrPassword, addressId);
+							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, null);
+							currentUser = model.retrieveAccountByUsername(newCstmrAccount, newCstmrPassword);
+							request.getSession().setAttribute(ACCOUNT_BEAN, currentUser);
+						} else {
+							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, "That user name is taken");
+							System.out.println("user already exists");
+							
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+				
+				// Place an order 
+				try {
+					List<CartBean> cartList = model.retrieveUserCart(username);
+					String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
+					request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				target = "/OrderResult.jspx";
+				
+			}
+			System.out.println("now forwarding to ..." + target);
+			request.getRequestDispatcher(target).forward(request, response);
+
 		}
 
 	}
