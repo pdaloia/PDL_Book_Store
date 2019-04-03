@@ -3,6 +3,7 @@ package DAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.InitialContext;
@@ -24,42 +25,60 @@ public class PODAO {
 		}
 	}
 	
-	public String placeOrder(int id, String lname, String fname, int address, ArrayList<CartBean> books) throws SQLException{
+	public String placeOrder(String lname, String fname, int address, List<CartBean> books) throws SQLException{
 		String msg = "";
 		String status = "";
 		String query = "select count(*) from po";
 		Connection con = this.ds.getConnection();
-		PreparedStatement p = con.prepareStatement(query);
-		ResultSet r = p.executeQuery();
+		PreparedStatement p1 = con.prepareStatement(query);
+		ResultSet r = p1.executeQuery();
 		r.next();
 		int poRow = r.getInt(1);	// get the number of rows in the table PO
 		
 		// 1. Third purchase order. Authorization failed 
-		if((poRow+1)%3 == 0) { 
+		if((poRow++)%3 == 0) { 
 			msg = "Credit Card Authorization Failed.";
+			System.out.println(msg);
 			status = "DENIED";
+			
+			// update PO Table
+			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', \'" + address + "\')");
 		}
 		// 2. Authorization succeeded. Successfully place an order. 
 		else {
 			msg = "Order Successfully Completed.";
+			System.out.println(msg);
 			status = "ORDERED";
-			r = p.executeQuery("select count(*) from poitem");
+			PreparedStatement p2 = con.prepareStatement("select username from Accounts where lname=? and fname=?");
+			p2.setString(1, lname);
+			p2.setString(2, fname);
+			r = p2.executeQuery();
 			r.next();
+			String username =  r.getString("username");
 			
-			// Add each books in the Cart to POITEM Table.
-			// Needs to be modified. 
+			// update PO Table
+			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', \'" + address + "\')");
+
+			// Add each book in the Cart to POITEM Table and delete it.
+			PreparedStatement p3 = null;
 			for (CartBean element: books) {
-				p.executeUpdate("INSERT INTO po " + "VALUES (" + id + ", " + element.getBid() + ", " + element.getPrice() + ")");
+				// Add
+				p1.executeUpdate("insert into POItem " + "VALUES (" + poRow + ", \'" + element.getBid() + "\', " + element.getPrice() + ")");
 				
+				// Delete
+				p3 = con.prepareStatement("DELETE from cart where bid=? and username=\'"+ username + "\'");
+				p3.setString(1, element.getBid());
+				p3.executeUpdate();
 			}
+			p2.close();
+			p3.close();
 		}
 		
-		//update PO Table
-		poRow++; 
-		p.executeUpdate("insert into po " + "VALUES (" + poRow + ", " + lname + ", " + fname + ", \'" + status + "\', " + address + ")");
+	
 		
+
 		r.close();
-		p.close();
+		p1.close();
 		con.close();
 		
 		return msg; 
