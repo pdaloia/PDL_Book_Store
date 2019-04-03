@@ -77,6 +77,12 @@ public class model {
     public AddressBean retrieveAddressById(int id) throws Exception {
     	 return addressDAO.retrieveAddressById(id);
     }
+    
+    public int addNewAddress(String street, String province, String country, String zip, String phone) throws SQLException{
+    	return addressDAO.addNewAddress(street, province, country, zip, phone);
+
+    }
+    
 
     
     /****************** Books Module from here *****************/
@@ -142,6 +148,7 @@ public class model {
 		
 	}
     
+ 
     
     /****************** Cart Module from here *****************/
     
@@ -186,9 +193,9 @@ public class model {
     
     /****************** Payment Module from here *****************/
     
-    public String placeOrder(int id, String lname, String fname, int address, ArrayList<CartBean> books) throws Exception
+    public String placeOrder(String lname, String fname, int address, List<CartBean> books) throws Exception
     {
-    	String msg = poDAO.placeOrder(id, lname, fname, address, books);
+    	String msg = poDAO.placeOrder(lname, fname, address, books);
     	return msg;
     }
     
