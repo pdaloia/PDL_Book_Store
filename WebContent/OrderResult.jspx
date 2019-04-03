@@ -11,15 +11,19 @@
 		omit-xml-declaration="true" />
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Successfully Logged Out</title>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/res/mc.css" type="text/css" />
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/res/mc.js">;
+</script>
+<title>Payment</title>
 <script type="text/javascript" src="res/mc.js">;</script>
 </head>
 <body>
-
-	<form action='' method='POST'>
-
+	<form action='' method="post" id="orderResult" name="orderResult"
+		onsubmit="return validate()">
+		<input type="hidden" name="page" value="1" />
 		<div>
-			<c:set var="username" value="${accountUserName}" />
 			<table align="right" style="width: 50%">
 				<tr>
 					<td><a href="/PDL_Book_Store/Start">Home</a></td>
@@ -48,10 +52,34 @@
 			</table>
 		</div>
 
-		Successfully Logged Out
+		<h1>Search Books By Title</h1>
+		<table>
+			<tr>
+				<td><input type="text" name='searchvalue' id='searchvalue' /></td>
+				<td><input type='submit' value='Search' name='textSearchButton'
+					id='textSearchButton' /></td>
+			</tr>
+		</table>
 
+
+		<h1>Browse by category:</h1>
+		<table>
+			<tr>
+				<td><a href="/PDL_Book_Store/DisplayBooksPage?category=science">Science</a></td>
+				<td><a
+					href="/PDL_Book_Store/DisplayBooksPage?category=engineering">Engineering</a></td>
+				<td><a href="/PDL_Book_Store/DisplayBooksPage?category=fiction">Fiction</a></td>
+			</tr>
+		</table>
+
+
+		<c:if test="${empty showResult }">
+			<h1>${PAYMENT_RESULT_MESSAGE}</h1>
+		</c:if>
+		<c:if test="${not empty showResult }">
+			${showResult }
+		</c:if>
 	</form>
-
 </body>
 	</html>
 </jsp:root>

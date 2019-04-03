@@ -1,73 +1,90 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-          xmlns:c="http://java.sun.com/jsp/jstl/core"
-          xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-          xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
-    <jsp:directive.page contentType="text/html; charset=UTF-8" 
-                        pageEncoding="UTF-8" session="true"/>
-    <jsp:output doctype-root-element="html"
-                doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
-                omit-xml-declaration="true" />
-    <html xmlns="http://www.w3.org/1999/xhtml">
-        <head>
-            <title>Book Details</title>
-            <script type="text/javascript" src="res/mc.js">;</script>
-        </head>
-        <body>
-            <form action="/ShoppingCart" method="POST" onsubmit="{return false;}" >
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=UTF-8"
+		pageEncoding="UTF-8" session="true" />
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Book Details</title>
+<script type="text/javascript" src="res/mc.js">;</script>
+</head>
+<body>
+	<form action="/ShoppingCart" method="POST" onsubmit="{return false;}">
 
-                <div>
-                    <c:set var="username" value="${accountUserName}"/>
-                    <table align="right" style="width: 50%">
-                        <tr>
-                            <td><a href="/PDL_Book_Store/Start">Home</a></td>
-                            <td><a href="/PDL_Book_Store/ShoppingCart" style="padding-left: 45px;" >View Shopping Cart</a>
-                             <span style="width: 38px;position: relative; display: block;">
-                                <img src="res/shopping_basket_red.png" style="position: absolute;width: 40px; top: -32px;"  />
-                                <lable style="width: 100%; text-align: center;  z-index: 9999999; position: absolute;   color: #fff; font-weight: bold; top: -10px;" id="cartItemCount"  >${cartCount}</lable>
-                            
-                            </span>
-                            </td>
-                            <c:if test="${empty accountBean}"><td><a href="/PDL_Book_Store/Login">Login</a></td></c:if>
-                            <c:if test="${not empty accountBean}"><td>${accountBean.username}</td></c:if>
-                            <c:if test="${empty accountBean}"><td><a href="/PDL_Book_Store/Register">Register</a></td></c:if>
-                            <c:if test="${not empty accountBean}"><td><a href="/PDL_Book_Store/Logout">Logout</a></td></c:if>
-                            </tr>
-                        </table>
-                    </div>
+		<div>
+			<c:set var="username" value="${accountUserName}" />
+			<table align="right" style="width: 50%">
+				<tr>
+					<td><a href="/PDL_Book_Store/Start">Home</a></td>
+					<td><a href="/PDL_Book_Store/ShoppingCart"
+						style="padding-left: 45px;">View Shopping Cart</a> <span
+						style="width: 38px; position: relative; display: block;"> <img
+							src="images/shopping_basket_red.png"
+							style="position: absolute; width: 40px; top: -32px;" /> <lable
+								style="width: 100%; text-align: center;  z-index: 9999999; position: absolute;   color: #fff; font-weight: bold; top: -10px;"
+								id="cartItemCount">${cartCount}</lable>
 
-                    <h1>Book Details</h1>
-                <c:set var="book" value="${listOfBooks}"/>
-                <h3>Book Title:</h3>
-                <p>${book.title}</p>
-                <h3>Price:</h3>
-                <p>${book.price}</p>
-                <input type="submit" value='Add to Cart' name='addToCart'  onclick="{ addItemToCart( '${book.bid}','${book.title}','${book.price}' ); }" id='addToCart'/> <br/> <br/>
-                <a href="/PDL_Book_Store/Reviews?bookid=${book.bid}">See reviews for this book</a>
-                <br/>
+					</span></td>
+					<c:if test="${empty accountBean}">
+						<td><a href="/PDL_Book_Store/Login">Login</a></td>
+					</c:if>
+					<c:if test="${not empty accountBean}">
+						<td>${accountBean.username}</td>
+					</c:if>
+					<c:if test="${empty accountBean}">
+						<td><a href="/PDL_Book_Store/Register">Register</a></td>
+					</c:if>
+					<c:if test="${not empty accountBean}">
+						<td><a href="/PDL_Book_Store/Logout">Logout</a></td>
+					</c:if>
+				</tr>
+			</table>
+		</div>
 
-                <c:if test="${not empty accountBean}">
-                    <h3>Leave a Review:</h3>
+		<h1>Book Details</h1>
+		<c:set var="book" value="${listOfBooks}" />
+		<h3>Book Title:</h3>
+		<p>${book.title}</p>
+		<h3>Price:</h3>
+		<p>${book.price}</p>
+		<input type="submit" value='Add to Cart' name='addToCart'
+			onclick="{ addItemToCart( '${book.bid}','${book.title}','${book.price}' ); }"
+			id='addToCart' /> <br /> <br /> <a
+			href="/PDL_Book_Store/Reviews?bookid=${book.bid}">See reviews for
+			this book</a> <br />
+
+		<c:if test="${not empty accountBean}">
+			<h3>Leave a Review:</h3>
                     Rating (Out of 5):
-                    <input type="radio" name="reviewRating" id="reviewRating" value="1"/> 1
-                    <input type="radio" name="reviewRating" id="reviewRating" value="2"/> 2
-                    <input type="radio" name="reviewRating" id="reviewRating" value="3" checked="checked"/> 3
-                    <input type="radio" name="reviewRating" id="reviewRating" value="4"/> 4
-                    <input type="radio" name="reviewRating" id="reviewRating" value="5"/> 5 <br/>
-                    <textarea rows="5" cols="60" name="reviewText">Enter Your Review Here!</textarea>
-                    <br/>
-                    <input type="submit" name="submitReview" id="submitReview"/>
-                </c:if>
-                <c:if test="${empty accountBean}">
-                    <a href="/PDL_Book_Store/Login">Login to leave a review</a>
-                </c:if>
+                    <input type="radio" name="reviewRating"
+				id="reviewRating" value="1" /> 1
+                    <input type="radio" name="reviewRating"
+				id="reviewRating" value="2" /> 2
+                    <input type="radio" name="reviewRating"
+				id="reviewRating" value="3" checked="checked" /> 3
+                    <input type="radio" name="reviewRating"
+				id="reviewRating" value="4" /> 4
+                    <input type="radio" name="reviewRating"
+				id="reviewRating" value="5" /> 5 <br />
+			<textarea rows="5" cols="60" name="reviewText">Enter Your Review Here!</textarea>
+			<br />
+			<input type="submit" name="submitReview" id="submitReview" />
+		</c:if>
+		<c:if test="${empty accountBean}">
+			<a href="/PDL_Book_Store/Login">Login to leave a review</a>
+		</c:if>
 
-                    <input type="hidden" value="${book.title}"  name="title"  ></input>
-                    <input type="hidden" value="${book.price}"  name="price"  ></input>
-                    <input type="hidden" value="${book.bid}"  name="bid"  ></input>
-                            
-            </form>  
-        </body>
-    </html>
+		<input type="hidden" value="${book.title}" name="title"></input> <input
+			type="hidden" value="${book.price}" name="price"></input> <input
+			type="hidden" value="${book.bid}" name="bid"></input>
+
+	</form>
+</body>
+	</html>
 </jsp:root>
