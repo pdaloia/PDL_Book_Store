@@ -12,8 +12,10 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet"
-	href="res/mc.css" type="text/css" />
-<script type="text/javascript" src="res/mc.js">;</script>
+	href="${pageContext.request.contextPath}/res/mc.css" type="text/css" />
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/res/mc.js">;
+</script>
 <title>Payment</title>
 <script type="text/javascript" src="res/mc.js">;</script>
 </head>
@@ -26,7 +28,7 @@
 				<tr>
 					<td><a href="/PDL_Book_Store/Start">Home</a></td>
 					<td><a style="padding-left: 45px;"
-						href="/PDL_Book_Store/ShoppingCart">View Shopping Cart</a> <span
+						href="http://www.google.com">View Shopping Cart</a> <span
 						style="width: 38px; position: relative; display: block;"> <img
 							src="images/shopping_basket_red.png"
 							style="position: absolute; width: 40px; top: -32px;" /> <lable
