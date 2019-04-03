@@ -106,7 +106,7 @@ function addItemToCart(bid, title,price){
         }
     };
     xhr.send(encodeURI(params));
-    
+    alert("Successfully added!");
     
     
 }
@@ -116,9 +116,9 @@ function addItemToCart(bid, title,price){
 
 // payment module starts here
  
-function newCustomer() {
-	var checkBox = document.getElementById("newCheckBox");
-	var text = document.getElementById("newCustomerOrder");
+function displayOnClick(checkboxId,textId) {
+	var checkBox = document.getElementById(checkboxId);
+	var text = document.getElementById(textId);
 	if (checkBox.checked == true) {
 		text.style.display = "block";
 	} else {
