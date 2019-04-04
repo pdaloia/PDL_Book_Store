@@ -177,6 +177,7 @@ public class Start extends HttpServlet {
 					String bid = request.getParameter("bookid");
 					String review = request.getParameter("reviewText");
 					//String email = request.getParameter("reviewEmail");
+					System.out.println(currentUser);
 					String email = currentUser.getEmail();
 					int rating = Integer.parseInt(request.getParameter("reviewRating"));
 					try {
@@ -249,6 +250,7 @@ public class Start extends HttpServlet {
 							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, null);
 							request.getSession().setAttribute(ACCOUNT_BEAN,
 									model.retrieveAccountByUsername(enteredUserName, enteredPassword));
+							currentUser = (AccountBean) request.getSession().getAttribute(ACCOUNT_BEAN);
 							response.sendRedirect("/PDL_Book_Store/Start");
 						} else {
 							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, "That user name is taken");
@@ -310,6 +312,7 @@ public class Start extends HttpServlet {
 		else if (URI.contains("Logout")) {
 
 			request.getSession().setAttribute(ACCOUNT_BEAN, null);
+			currentUser = null;
 			System.out.println(request.getSession().getAttribute(ACCOUNT_BEAN));
 
 			target = "/LogoutPage.jspx";
