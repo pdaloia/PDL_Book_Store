@@ -36,13 +36,15 @@ public class PODAO {
 		int poRow = r.getInt(1);	// get the number of rows in the table PO
 		
 		// 1. Third purchase order. Authorization failed 
-		if((poRow++)%3 == 0) { 
+		if((poRow)%3 == 0) { 
 			msg = "Credit Card Authorization Failed.";
 			System.out.println(msg);
 			status = "DENIED";
 			
 			// update PO Table
-			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', \'" + address + "\')");
+			poRow++;
+			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', " + address + ")");
+					
 		}
 		// 2. Authorization succeeded. Successfully place an order. 
 		else {
@@ -52,7 +54,9 @@ public class PODAO {
 			
 			
 			// update PO Table
-			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', \'" + address + "\')");
+			poRow++;
+			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', " + address + ")");
+
 
 			// Add each book in the Cart to POITEM Table.
 			for (CartBean element: books) {
@@ -61,6 +65,7 @@ public class PODAO {
 				
 			}
 		}
+		
 		
 		r.close();
 		p1.close();
