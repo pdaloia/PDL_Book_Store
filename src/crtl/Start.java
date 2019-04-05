@@ -148,10 +148,8 @@ public class Start extends HttpServlet {
 		 * Display page for viewing a certain books details
 		 */
 		else if (URI.contains("BookDetails")) {
-			System.out.println("Test Details");
 			// to check if the button is clicked
 			if (request.getParameter("addToCart") != null) {
-				System.out.println("Got here");
 				String bidToSearch;
 				bidToSearch = request.getParameter("bookid");
 				Map<String, BookBean> currentList = new HashMap<String, BookBean>();
@@ -172,8 +170,7 @@ public class Start extends HttpServlet {
 			}
 			
 			if (request.getParameter("submitReview") != null) {
-				//if (request.getParameter("submitReview").equals("Submit")) {
-					System.out.println("Test Review");
+	//			if (request.getParameter("submitReview").equals("Submit")) {
 					String bid = request.getParameter("bookid");
 					String review = request.getParameter("reviewText");
 					//String email = request.getParameter("reviewEmail");
@@ -185,7 +182,7 @@ public class Start extends HttpServlet {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				//}
+		//		}
 			}
 			String bidToSearch;
 			bidToSearch = request.getParameter("bookid");
@@ -324,8 +321,6 @@ public class Start extends HttpServlet {
 
 			if (request.getMethod().equals("POST")) {
 				if (request.getParameter("action") != null) {
-					// modification request
-					// use currentUser (accountBean object) instead of request.getParameter("username")
 					String action = request.getParameter("action");
 					if (action.equals("remove")) {
 						model.removeItemFromCart(request.getParameter("bid").trim(),
@@ -381,8 +376,8 @@ public class Start extends HttpServlet {
 			target = "/Payment.jspx";
 			if(currentUser != null) {
 				// a. check if address has been saved into this account
-				Integer id = currentUser.getAddressId();
-				if(id != null) {
+				int id = currentUser.getAddressId();
+				if(id != 0) {
 					try {
 						currentAddress = model.retrieveAddressById(id);
 						request.getSession().setAttribute(ADDRESS_BEAN, currentAddress);
@@ -396,54 +391,68 @@ public class Start extends HttpServlet {
 					String cardLastName = request.getParameter("cardLastName");
 					String cardFirstName = request.getParameter("cardFirstName");
 					// b1. check if current user has existing address. 
-					if(id != null) {
+					if(id != 0) {
 						// b-1a. check if the user has requested the different address. 
 						// 	  check the validity with javascript. 
-						if(request.getParameter("differentStreet")!=null) {
-							// Get different address
-							String differentStreet = request.getParameter("differentStreet");
-							String differentProvince = request.getParameter("differentProvince");
-							String differentCountry = request.getParameter("differentCountry");
-							String differentZip = request.getParameter("differentZip");
-							String differentPhone = request.getParameter("differentPhone");
-							
-							// Place an order 
-							try {
-								int addressId = 0;
-								addressId = model.addNewAddress(differentStreet, differentProvince, differentCountry, differentZip, differentPhone);
-								List<CartBean> cartList = model.retrieveUserCart(username);
-								String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
-								request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
-								
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							target = "/OrderResult.jspx";
-
-							
-							// Initialize the form variables 
-							request.getSession().setAttribute("differentStreet", null);
-							request.getSession().setAttribute("differentProvince", null);
-							request.getSession().setAttribute("differentCountry", null);
-							request.getSession().setAttribute("differentZip", null);
-							request.getSession().setAttribute("differentPhone", null);
-						}
-						// b-1b. order with existing address  
-						else {
-							try {
-								int addressId = currentUser.getAddressId();
-								List<CartBean> cartList = model.retrieveUserCart(username);
-								String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
-								request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
-								
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							target = "/OrderResult.jspx";
-						}	
 						
+						// Get different address attributes
+						String differentStreet = request.getParameter("differentStreet");
+						String differentProvince = request.getParameter("differentProvince");
+						String differentCountry = request.getParameter("differentCountry");
+						String differentZip = request.getParameter("differentZip");
+						String differentPhone = request.getParameter("differentPhone");
+						if (differentStreet != null && differentProvince != null && differentCountry != null
+								&& differentZip != null && differentPhone != null) {
+							if (!differentStreet.equals("") && !differentProvince.equals("")
+									&& !differentCountry.equals("") && !differentZip.equals("")
+									&& !differentPhone.equals("")) {
+
+								// Place an order and delete books from cart
+								try {
+									// add different address to the table and place an order.
+									int addressId = model.addNewAddress(differentStreet, differentProvince,
+											differentCountry, differentZip, differentPhone);
+									List<CartBean> cartList = model.retrieveUserCart(username);
+									String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId,
+											cartList);
+									request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+
+									// delete books from cart if order is processed.
+									if (resultMsg.contains("Successfully")) {
+										for (CartBean book : cartList) {
+											model.removeItemFromCart(book.getBid(), username);
+										}
+									}
+
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								target = "/OrderResult.jspx";
+
+							}
+							// b-1b. order with existing address  
+							else {
+								try {
+									List<CartBean> cartList = model.retrieveUserCart(username);
+									String resultMsg = model.placeOrder(cardLastName, cardFirstName, id, cartList);
+									request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+									
+									// delete books from cart if order is processed. 
+									if (resultMsg.contains("Successfully")) {
+										for (CartBean book: cartList) {
+											model.removeItemFromCart(book.getBid(), username);
+										}
+									}
+									
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								target = "/OrderResult.jspx";
+							}	
+						}
+				
 					}
 					// b-2. current user has no existing address.
 					else {
@@ -456,14 +465,21 @@ public class Start extends HttpServlet {
 						// Place an order 
 						try {
 							// Add new address and save it into the current user
-							int addressId = 0;
-							addressId = model.addNewAddress(newStreet, newProvince, newCountry, newZip, newPhone);
+							int addressId = model.addNewAddress(newStreet, newProvince, newCountry, newZip, newPhone);
 							currentUser.setAddressId(addressId);
+							model.updateAddressId(currentUser.getUsername(), addressId);
 							
 							// Add cart items and place an order
 							List<CartBean> cartList = model.retrieveUserCart(username);
 							String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
 							request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
+							
+							// delete books from cart if order is processed. 
+							if (resultMsg.contains("Successfully")) {
+								for (CartBean book: cartList) {
+									model.removeItemFromCart(book.getBid(), username);
+								}
+							}
 							
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
@@ -472,11 +488,6 @@ public class Start extends HttpServlet {
 						target = "/OrderResult.jspx";
 						
 						// initialize form variables
-						request.getSession().setAttribute("newStreet", null);
-						request.getSession().setAttribute("newProvince", null);
-						request.getSession().setAttribute("newCountry", null);
-						request.getSession().setAttribute("newZip", null);
-						request.getSession().setAttribute("newPhone", null);
 					}	
 					
 				}
@@ -495,8 +506,8 @@ public class Start extends HttpServlet {
 				
 				// Get account information 
 				String newCstmrAccount = request.getParameter("newCstmrAccount");
-				String cardLastName = request.getParameter("cardLastName");
-				String cardFirstName = request.getParameter("cardFirstName");
+				String newCstmrLastName = request.getParameter("newCstmrLastName");
+				String newCstmrFirstName = request.getParameter("cardFirstName");
 				String newCstmrEmail = request.getParameter("newCstmrEmail");
 				String newCstmrPassword = request.getParameter("newCstmrPassword");
 				
@@ -512,7 +523,6 @@ public class Start extends HttpServlet {
 				else {
 					try {
 						addressId = model.addNewAddress(street, province, country, zip, phone);
-						System.out.println("Address has been succesfully added");
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -521,14 +531,14 @@ public class Start extends HttpServlet {
 				
 				// Add account information
 				if (newCstmrAccount.equals("") || newCstmrEmail.equals("") || newCstmrPassword.equals("")
-						|| cardFirstName.equals("") || cardLastName.equals("")) {
+						|| newCstmrFirstName.equals("") || newCstmrLastName.equals("")) {
 					System.out.println("field left empty (Account Information)");
 					request.setAttribute(REGISTER_ERROR_MESSAGE, "Please enter all fields for Account Information");
 				}
 				else {		
 					try {
 						if (model.checkForUser(newCstmrAccount) == false) {
-							model.addNewAccount(newCstmrAccount, cardFirstName, cardLastName, newCstmrEmail, newCstmrPassword, addressId);
+							model.addNewAccount(newCstmrAccount, newCstmrFirstName, newCstmrLastName, newCstmrEmail, newCstmrPassword, addressId);
 							request.getSession().setAttribute(REGISTER_ERROR_MESSAGE, null);
 							currentUser = model.retrieveAccountByUsername(newCstmrAccount, newCstmrPassword);
 							request.getSession().setAttribute(ACCOUNT_BEAN, currentUser);
@@ -540,15 +550,20 @@ public class Start extends HttpServlet {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-
 				}
 				
 				// Place an order 
 				try {
 					List<CartBean> cartList = model.retrieveUserCart(username);
-					String resultMsg = model.placeOrder(cardLastName, cardFirstName, addressId, cartList);
+					String resultMsg = model.placeOrder(newCstmrLastName, newCstmrFirstName, addressId, cartList);
 					request.getSession().setAttribute(PAYMENT_RESULT_MESSAGE, resultMsg);
 					
+					// delete books from cart if order is processed. 
+					if (resultMsg.contains("Successfully")) {
+						for (CartBean book: cartList) {
+							model.removeItemFromCart(book.getBid(), username);
+						}
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -556,9 +571,7 @@ public class Start extends HttpServlet {
 				target = "/OrderResult.jspx";
 				
 			}
-			System.out.println("now forwarding to ..." + target);
 			request.getRequestDispatcher(target).forward(request, response);
-
 		}
 
 	}
