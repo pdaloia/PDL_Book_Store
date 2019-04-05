@@ -62,18 +62,12 @@
 		<c:if test="${not empty accountBean}">
 			<h3>Leave a Review:</h3>
                     Rating (Out of 5):
-                    <input type="radio" name="reviewRating"
-				id="reviewRating" value="1" /> 1
-                    <input type="radio" name="reviewRating"
-				id="reviewRating" value="2" /> 2
-                    <input type="radio" name="reviewRating"
-				id="reviewRating" value="3" checked="checked" /> 3
-                    <input type="radio" name="reviewRating"
-				id="reviewRating" value="4" /> 4
-                    <input type="radio" name="reviewRating"
-				id="reviewRating" value="5" /> 5 <br />
-			<textarea rows="5" cols="60" name="reviewText">Enter Your Review Here!</textarea>
-			<br />
+                    <input type="radio" name="reviewRating" id="reviewRating" value="1" /> 1
+                    <input type="radio" name="reviewRating" id="reviewRating" value="2" /> 2
+                    <input type="radio" name="reviewRating" id="reviewRating" value="3" checked="checked" /> 3
+                    <input type="radio" name="reviewRating" id="reviewRating" value="4" /> 4
+                    <input type="radio" name="reviewRating" id="reviewRating" value="5" /> 5 <br />
+			<textarea rows="5" cols="60" name="reviewText">Enter Your Review Here!</textarea><br />
 			<input type="submit" name="submitReview" id="submitReview" />
 		</c:if>
 		<c:if test="${empty accountBean}">

@@ -12,10 +12,8 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/res/mc.css" type="text/css" />
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/res/mc.js">;
-</script>
+	href="res/mc.css" type="text/css" />
+<script type="text/javascript" src="res/mc.js">;</script>
 <title>Payment</title>
 <script type="text/javascript" src="res/mc.js">;</script>
 </head>
@@ -28,7 +26,7 @@
 				<tr>
 					<td><a href="/PDL_Book_Store/Start">Home</a></td>
 					<td><a style="padding-left: 45px;"
-						href="http://www.google.com">View Shopping Cart</a> <span
+						href="/PDL_Book_Store/ShoppingCart">View Shopping Cart</a> <span
 						style="width: 38px; position: relative; display: block;"> <img
 							src="images/shopping_basket_red.png"
 							style="position: absolute; width: 40px; top: -32px;" /> <lable
@@ -246,15 +244,27 @@
 										<td><h2>Account Information:</h2></td>
 									</tr>
 									<tr>
+										<td><label for="newCstmrFirstName">First Name :</label></td>
+										<td><input name="newCstmrFirstName" id="newCstmrFirstName"
+											type="text" placeholder="First name"
+											value="${newCstmrFirstName}" /></td>
+									</tr>
+									<tr>
+										<td><label for="newCstmrLastName">Last Name :</label></td>
+										<td><input name="newCstmrLastName" id="newCstmrLastName"
+											type="text" placeholder="Last name"
+											value="${newCstmrLastName}" /></td>
+									</tr>
+									<tr>
 										<td><label for="newCstmrAccount">Account Name :</label></td>
 										<td><input name="newCstmrAccount" id="newCstmrAccount"
-											type="text" placeholder="Enter account name"
+											type="text" placeholder="New account name"
 											value="${newCstmrAccount}" /></td>
 									</tr>
 									<tr>
 										<td><label for="newCstmrPassword">Password :</label></td>
 										<td><input name="newCstmrPassword" id="newCstmrPassword"
-											type="text" placeholder="Enter password"
+											type="text" placeholder="New password"
 											value="${newCstmrPassword}" /></td>
 
 									</tr>

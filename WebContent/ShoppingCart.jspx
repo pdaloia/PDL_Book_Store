@@ -1,134 +1,141 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
-          xmlns:c="http://java.sun.com/jsp/jstl/core"
-          xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-          xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
-    <jsp:directive.page contentType="text/html; charset=UTF-8" 
-                        pageEncoding="UTF-8" session="true"/>
-    <jsp:output doctype-root-element="html"
-                doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
-                omit-xml-declaration="true"  />
-    <html >
-        <head>
-            <style>
-                body{
-                    font-family: sans-serif;
-                }
-                table, th, td {
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                    padding: 10px;
-                    text-align: center;
-                }
-                
-                
-                table th{
-                    background-color: #ccccff;
-                    color: #0000cc;
-                    font-weight: bold;
-                }
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=UTF-8"
+		pageEncoding="UTF-8" session="true" />
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+	<html>
+<head>
+<style>
+body {
+	font-family: sans-serif;
+}
 
-            </style>
-            <link rel="StyleSheet" href="res/mc.css" type="text/css" media="screen, print"/>
-            <script type="text/javascript" src="res/mc.js">;</script>
-            <title>Shopping Cart</title>
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding: 10px;
+	text-align: center;
+}
 
-        </head>
-        <body>
-            
-            <div>
-                <c:set var="username" value="${accountUserName}"/>
-                <table align="right" style="border:none; width: 50%;">
-                    <tr style="border:none;">
-                        <td style="border:none;"><a href="/PDL_Book_Store/Start">Home</a></td>
-                        <td  style="border:none;" ><a href="/PDL_Book_Store/ShoppingCart"  >View Shopping Cart</a>
-                            <span style="width: 38px;position: relative; display: block;">
-                                <img src="images/shopping_basket_red.png" style="position: absolute;width: 40px; top: -32px;"  />
-                                <lable style="width: 100%; text-align: center;  z-index: 9999999; position: absolute;   color: #fff; font-weight: bold; top: -10px;" id="cartItemCount"  >${cartCount}</lable>
-                            
-                            </span>
-                        </td>
-                        <c:if test="${empty accountBean}"><td style="border:none;" ><a href="/PDL_Book_Store/Login">Login</a></td></c:if>
-                        <c:if test="${not empty accountBean}"><td style="border:none;" >${accountBean.username}</td></c:if>
-                        <c:if test="${empty accountBean}"><td style="border:none;" ><a href="/PDL_Book_Store/Register">Register</a></td></c:if>
-                        <c:if test="${not empty accountBean}"><td style="border:none;" ><a href="/PDL_Book_Store/Logout">Logout</a></td></c:if>
-                    </tr>
-                </table>
-            </div>
+table th {
+	background-color: #ccccff;
+	color: #0000cc;
+	font-weight: bold;
+}
+</style>
+<link rel="StyleSheet" href="res/mc.css" type="text/css"
+	media="screen, print" />
+<script type="text/javascript" src="res/mc.js">;</script>
+<title>Shopping Cart</title>
 
-            <h1>Shopping Cart</h1>
-            <form method="post" action="Payment.jspx" >
-                <table style="width: 100%">
-                    <c:if test="${cartLen eq 0}">
-                        <thead>
-                        <th>Cart</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>There is no item in the cart</td>
-                            </tr>
-                        </tbody>
+</head>
+<body>
 
-                    </c:if>
+	<div>
+		<c:set var="username" value="${accountUserName}" />
+		<table align="right" style="border: none; width: 50%;">
+			<tr style="border: none;">
+				<td style="border: none;"><a href="/PDL_Book_Store/Start">Home</a></td>
+				<td style="border: none;"><a
+					href="/PDL_Book_Store/ShoppingCart">View Shopping Cart</a> <span
+					style="width: 38px; position: relative; display: block;"> <img
+						src="images/shopping_basket_red.png"
+						style="position: absolute; width: 40px; top: -32px;" /> <lable
+							style="width: 100%; text-align: center;  z-index: 9999999; position: absolute;   color: #fff; font-weight: bold; top: -10px;"
+							id="cartItemCount">${cartCount}</lable>
 
+				</span></td>
+				<c:if test="${empty accountBean}">
+					<td style="border: none;"><a href="/PDL_Book_Store/Login">Login</a></td>
+				</c:if>
+				<c:if test="${not empty accountBean}">
+					<td style="border: none;">${accountBean.username}</td>
+				</c:if>
+				<c:if test="${empty accountBean}">
+					<td style="border: none;"><a href="/PDL_Book_Store/Register">Register</a></td>
+				</c:if>
+				<c:if test="${not empty accountBean}">
+					<td style="border: none;"><a href="/PDL_Book_Store/Logout">Logout</a></td>
+				</c:if>
+			</tr>
+		</table>
+	</div>
 
-                    <c:if test="${cartLen > 0}"    >
+	<h1>Shopping Cart</h1>
+	<form method="post" action=''>
+		<table style="width: 100%">
+			<c:if test="${cartLen eq 0}">
+				<thead>
+					<th>Cart</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td>There is no item in the cart</td>
+					</tr>
+				</tbody>
 
-                        <thead>
-                        <th>Quantity</th>
-                        <th>Item</th>
-                        <th>Price</th>
-                        <th>Action</th>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="item" items="${userCart}">
-                                <c:set var="unitPrice" value="${item.price/item.quantity}"   />
-                                <tr>
-                                    <td style="width: 10%;"><input type="number"   min="1" class="itemQuantity"  style="width: 60px; padding: 5px;"  step="1" value="${item.quantity}"  data-val="${item.bid},${item.userName},${unitPrice}"     /></td>
-                                    <td>${item.title}</td>
-                                    <td>${item.price}</td>
-                                    <td>
-
-                                        <a  href="javascript:void(0);" onclick="{ removeItem('${item.bid}', '${item.userName}'  ); }" style="font-size: 13px; cursor: pointer; text-decoration: none; padding: 10px; background: #cc0066; border-radius: 5px; color: #fff;"  >Remove</a>
-                                        <input type="hidden" name="bid" value="${item.bid}"  />
-                                        <input type="hidden" name="quantity" value="${item.quantity}"  />
-                                        <input type="hidden" name="price" value="${item.quantity}"  />
-                                        <input type="hidden" name="username" value="${item.userName}"  />
-                                    </td>
-                                    
-                                </tr>
-                            </c:forEach>
-                            <tr>
-                                <td colspan="2" style="text-align: right;">
-                                    <strong>Total:</strong>
-                                </td>
-                                <td  style="text-align: center;">
-                                    <strong>${totalPrice}</strong>
-                                </td>
-                                <td  style="text-align: left;">
-
-                                </td>
-                            </tr>    
-                            <tr>
-                                <td colspan="2">
-                                    <a  href="javascript:void(0);" style="font-size: 13px; cursor: pointer; text-decoration: none; padding: 10px; background: #0000cc; border-radius: 5px; color: #fff;"  onclick="{updateChanges();}"  >Update Quantities</a>
-                                </td>
-                                <td colspan="2">
-                                    <br><input  style="border:none; font-family: sans-serif; font-size: 13px; cursor: pointer; padding: 10px; background: #669900; border-radius: 5px; color: #fff;" type="submit" value="proceed to checkout" /></br>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </c:if>
+			</c:if>
 
 
+			<c:if test="${cartLen > 0}">
+
+				<thead>
+					<th>Quantity</th>
+					<th>Item</th>
+					<th>Price</th>
+					<th>Action</th>
+				</thead>
+				<tbody>
+					<c:forEach var="item" items="${userCart}">
+						<c:set var="unitPrice" value="${item.price/item.quantity}" />
+						<tr>
+							<td style="width: 10%;"><input type="number" min="1"
+								class="itemQuantity" style="width: 60px; padding: 5px;" step="1"
+								value="${item.quantity}"
+								data-val="${item.bid},${item.userName},${unitPrice}" /></td>
+							<td>${item.title}</td>
+							<td>${item.price}</td>
+							<td><a href="javascript:void(0);"
+								onclick="{ removeItem('${item.bid}', '${item.userName}'  ); }"
+								style="font-size: 13px; cursor: pointer; text-decoration: none; padding: 10px; background: #cc0066; border-radius: 5px; color: #fff;">Remove</a>
+								<input type="hidden" name="bid" value="${item.bid}" /> 
+								<input type="hidden" name="quantity" value="${item.quantity}" /> 
+								<input type="hidden" name="price" value="${item.quantity}" /> 
+								<input type="hidden" name="username" value="${item.userName}" /></td>
+						</tr>
+					</c:forEach>
+					<tr>
+						<td colspan="2" style="text-align: right;"><strong>Total:</strong>
+						</td>
+						<td style="text-align: center;"><strong>${totalPrice}</strong>
+						</td>
+						<td style="text-align: left;"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><a href="javascript:void(0);"
+							style="font-size: 13px; cursor: pointer; text-decoration: none; padding: 10px; background: #0000cc; border-radius: 5px; color: #fff;"
+							onclick="{updateChanges();}">Update Quantities</a></td>
+						<td colspan="2"><br> <a href="/PDL_Book_Store/Payment"
+							style="border: none; font-family: sans-serif; text-decoration: none; font-size: 13px; cursor: pointer; padding: 10px; background: #669900; border-radius: 5px; color: #fff;">Check
+								Out</a></br></td>
+					</tr>
+				</tbody>
+			</c:if>
 
 
-                </table>
-            </form>
 
-             
+
+		</table>
+	</form>
+
+
 
 
 </body>
-</html>
+	</html>
 </jsp:root>
