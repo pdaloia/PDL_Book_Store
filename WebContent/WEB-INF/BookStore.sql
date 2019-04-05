@@ -154,9 +154,9 @@ FOREIGN KEY (addressID) REFERENCES Address(id)
 #
 # Dumping data for table 'Accounts'
 #
-INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('phild', 'Philip', 'Daloia', 'philip@gmail.com', '1234',1);
-INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('ammar', 'Ammar', 'Halawani', 'ammar@gmail.com', '1234',2);
-INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('daelee', 'Dae', 'Lee', 'dae@gmail.com', '1234',3);
+INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('phild', 'Philip', 'Daloia', 'philip@gmail.com', '1234',null);
+INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('ammar', 'Ammar', 'Halawani', 'ammar@gmail.com', '1234',null);
+INSERT INTO Accounts (username, fname, lname, email, password, addressID) VALUES ('daelee', 'Dae', 'Lee', 'dae@gmail.com', '1234',null);
 #
 #
 /* book reviews
