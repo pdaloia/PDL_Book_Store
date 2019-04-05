@@ -121,6 +121,19 @@ public class AccountDAO {
 		con.close();
 		
 	}
+	
+
+	public void updateAddressId(String givenUsername, int addressId) throws SQLException {
+		String query = "UPDATE accounts SET addressID = " + addressId + " WHERE username = '" + givenUsername+ "'";
+		Connection con = this.ds.getConnection();
+		Statement st = con.createStatement();
+
+		st.executeUpdate(query);
+		st.close();
+
+		con.close();
+
+	}
 
 
 }

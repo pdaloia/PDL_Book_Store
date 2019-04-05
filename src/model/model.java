@@ -148,6 +148,9 @@ public class model {
 		
 	}
     
+    public void updateAddressId(String givenUsername, int addressId) throws Exception {
+    	accountDAO.updateAddressId(givenUsername, addressId);
+    }
  
     
     /****************** Cart Module from here *****************/
