@@ -1,17 +1,21 @@
 package model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+
 import bean.AccountBean;
 import bean.AddressBean;
 import bean.BookBean;
 import bean.CartBean;
 import bean.ReviewBean;
+import bean.VisitEventBean;
 import DAO.BookDAO;
 import DAO.CartDAO;
 import DAO.PODAO;
 import DAO.ReviewDAO;
 import DAO.AccountDAO;
 import DAO.AddressDAO;
+import DAO.VisitEventDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,6 +31,7 @@ public class model {
     private AccountDAO accountDAO;
     private CartDAO cartDAO;
     private PODAO poDAO;
+    private VisitEventDAO visitEventDAO;
 
     public model() {
 
@@ -68,6 +73,13 @@ public class model {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
+        try {
+			visitEventDAO = new VisitEventDAO();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
       
 
     }
@@ -109,6 +121,12 @@ public class model {
         rv = bookDAO.retrieveBooksByBID(searchBID);
         return rv;
 
+    }
+    
+    public LinkedList<BookBean> retrieveAllBooks() throws Exception{
+    	LinkedList<BookBean> rv = new LinkedList<BookBean>();
+    	rv = bookDAO.retrieveAllBooks();
+    	return rv;
     }
     
     /****************** Review Module from here *****************/
@@ -200,6 +218,14 @@ public class model {
     {
     	String msg = poDAO.placeOrder(lname, fname, address, books);
     	return msg;
+    }
+    
+    /****************** Payment Module from here *****************/
+    
+    public LinkedList<VisitEventBean> retrieveBooksSold() throws Exception{
+    	LinkedList<VisitEventBean> report = new LinkedList<VisitEventBean>();
+    	report = visitEventDAO.retrieveBooksSold();
+    	return report;
     }
     
     
