@@ -2,6 +2,7 @@ package DAO;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import javax.naming.InitialContext;
@@ -22,9 +23,9 @@ public class BookDAO {
 		}
 	}
 	
-	public Map<String, BookBean> retrieveAllBooks() throws SQLException{
+	public LinkedList<BookBean> retrieveAllBooks() throws SQLException{
 		String query = "select * from book";
-		Map<String, BookBean> rv = new HashMap<String, BookBean>();
+		LinkedList<BookBean> rv = new LinkedList<BookBean>();
 		Connection con = this.ds.getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		ResultSet r = p.executeQuery();
@@ -38,7 +39,7 @@ public class BookDAO {
 			String category = r.getString("CATEGORY");
 			BookBean current;
 			current = new BookBean(bid, title, price, author, category);
-			rv.put(bid, current);
+			rv.add(current);
 			
 		}
 		

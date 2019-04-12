@@ -2,6 +2,7 @@ package DAO;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import javax.naming.InitialContext;
@@ -22,10 +23,10 @@ public class VisitEventDAO {
 		}
 	}
 	
-	public Map<String, VisitEventBean> retrieveAllVisitEvents() throws SQLException{
+	public LinkedList<VisitEventBean> retrieveBooksSold() throws SQLException{
 		//String query = "select * from students where surname like '%" + namePrefix + "%' and credit_taken >= " + credit_taken;
-		String query = "select * from visitevent";
-		Map<String, VisitEventBean> rv = new HashMap<String, VisitEventBean>();
+		String query = "select * from visitevent where eventtype like 'purchase'";
+		LinkedList<VisitEventBean> rv = new LinkedList<VisitEventBean>();
 		Connection con = this.ds.getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		ResultSet r = p.executeQuery();
@@ -35,9 +36,10 @@ public class VisitEventDAO {
 			String day = r.getString("DAY");
 			String bid = r.getString("BID");
 			String eventtype = r.getString("EVENTTYPE");
+			
 			VisitEventBean current;
 			current = new VisitEventBean(day, bid, eventtype);
-			rv.put(bid, current);
+			rv.add(current);
 			
 		}
 		
