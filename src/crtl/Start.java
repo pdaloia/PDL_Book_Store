@@ -3,8 +3,11 @@ package crtl;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +20,8 @@ import bean.AddressBean;
 import bean.BookBean;
 import bean.CartBean;
 import bean.ReviewBean;
+import bean.VisitEventBean;
+
 import java.util.List;
 import model.model;
 
@@ -24,7 +29,7 @@ import model.model;
  * Servlet implementation class Start
  */
 @WebServlet({ "/Start", "/DisplayBooksPage", "/BookDetails", "/Reviews", "/Login", "/Logout", "/Register",
-		"/ShoppingCart", "/Payment" })
+		"/ShoppingCart", "/Payment", "/Admin"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String target;
@@ -47,6 +52,7 @@ public class Start extends HttpServlet {
 	private static final String ADDRESS_BEAN = "addressBean";
 	private static final String SESSION_USER_NAME = "sessionUsername";
 	private static final String PAYMENT_RESULT_MESSAGE = "paymentResultMessage";
+	private static final String REPORT_LIST = "reportList";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -575,6 +581,119 @@ public class Start extends HttpServlet {
 			}
 			request.getRequestDispatcher(target).forward(request, response);
 		}
+		
+		//Page for administrator functions and reports
+		else if (URI.contains("Admin")) {
+			
+			//main page for admin
+			if(request.getParameter("analytics") == null) {
+				System.out.println("servlet in admin");
+				target = "/AnalyticsPage.jspx";
+			}
+			//page to get most popular books of all time
+			else if(request.getParameter("analytics").equals("lifetime")) {
+				System.out.println("servlet in admin lifetime");
+				target = "/AnalyticsPage.jspx";
+			}
+			//page to get books sold each month
+			else if(request.getParameter("analytics").equals("month")) {
+				
+				System.out.println("servlet in admin monthly");
+				target = "/AnalyticsPage.jspx";
+				
+				//retrieve all books sold
+				LinkedList<VisitEventBean> listOfPurchases = new LinkedList<VisitEventBean>();
+				try {
+					listOfPurchases = model.retrieveBooksSold();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				TreeMap<String, HashMap<String, String>> booksSoldByMonth = new TreeMap<String, HashMap<String, String>>(new MyComparator());
+				
+				//Start populating Map with Keys, values won't matter right now
+				for(VisitEventBean currentVisitEventBean : listOfPurchases) {
+					System.out.println("Adding Bean: " + currentVisitEventBean);
+					
+					//create string for current month, year
+					String currentBeanYear = currentVisitEventBean.getDay().substring(4);
+					String currentBeanMonth = currentVisitEventBean.getDay().substring(0, 2);
+					if(currentBeanMonth.equals("1") || currentBeanMonth.equals("01"))
+						currentBeanMonth = "January";
+					else if(currentBeanMonth.equals("2") || currentBeanMonth.equals("02"))
+						currentBeanMonth = "February";
+					else if(currentBeanMonth.equals("3") || currentBeanMonth.equals("03"))
+						currentBeanMonth = "March";
+					else if(currentBeanMonth.equals("4") || currentBeanMonth.equals("04"))
+						currentBeanMonth = "April";
+					else if(currentBeanMonth.equals("5") || currentBeanMonth.equals("05"))
+						currentBeanMonth = "May";
+					else if(currentBeanMonth.equals("6") || currentBeanMonth.equals("06"))
+						currentBeanMonth = "June";
+					else if(currentBeanMonth.equals("7") || currentBeanMonth.equals("07"))
+						currentBeanMonth = "July";
+					else if(currentBeanMonth.equals("8") || currentBeanMonth.equals("08"))
+						currentBeanMonth = "August";
+					else if(currentBeanMonth.equals("9") || currentBeanMonth.equals("09"))
+						currentBeanMonth = "September";
+					else if(currentBeanMonth.equals("10") || currentBeanMonth.equals("10"))
+						currentBeanMonth = "October";
+					else if(currentBeanMonth.equals("11") || currentBeanMonth.equals("11"))
+						currentBeanMonth = "November";
+					else
+						currentBeanMonth = "December";
+					String currentBeanFullDate = currentBeanMonth + ", " + currentBeanYear;
+					
+					HashMap<String, String> innerMapping = new HashMap<String, String>();
+					
+					String bookTitle = null;
+					try {
+						bookTitle = model.retrieveBooksByBID(currentVisitEventBean.getBid()).get(currentVisitEventBean.getBid()).getTitle();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					//if date isn't in map yet, add it with an inner mapping of the current purchase event's book
+					if(booksSoldByMonth.containsKey(currentBeanFullDate) == false) {
+						innerMapping.put(bookTitle, "1");
+						booksSoldByMonth.put(currentBeanFullDate, innerMapping);
+					}
+					//if date is in map already
+					else {
+						innerMapping = booksSoldByMonth.get(currentBeanFullDate);
+						int numberOfBooksSold;
+						//if the inner mapping contains the book id
+						if(innerMapping.containsKey(bookTitle)){
+							numberOfBooksSold = Integer.parseInt(innerMapping.get(bookTitle));
+							numberOfBooksSold++;
+							innerMapping.put(bookTitle, Integer.toString(numberOfBooksSold));
+							booksSoldByMonth.put(currentBeanFullDate, innerMapping);
+						}
+						//if the inner mapping does not contain the book id
+						else {
+							innerMapping.put(bookTitle, "1");
+							booksSoldByMonth.put(currentBeanFullDate, innerMapping);
+						}
+					}
+					
+				}
+				
+				request.setAttribute(REPORT_LIST, booksSoldByMonth);
+				System.out.println(booksSoldByMonth);
+				target = "/BooksSoldEachMonthPage.jspx";
+				
+			}
+			else {
+				System.out.println("servlet in admin else");
+				target = "/AnalyticsPage.jspx";
+			}
+			
+			
+			request.getRequestDispatcher(target).forward(request, response);
+			
+		}
 
 	}
 
@@ -587,5 +706,95 @@ public class Start extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	
+	static class MyComparator implements Comparator<String>
+    {
+		@Override
+        public int compare(String o1,String o2)
+        {
+			int result = 0;
+			
+            String o1Date[] = o1.split(", ");
+            String o2Date[] = o2.split(", ");
+            String o1MonthString = o1Date[0];
+            int o1Year = Integer.parseInt(o1Date[1]);
+            String o2MonthString = o2Date[0];
+            int o2Year = Integer.parseInt(o2Date[1]);
+            
+            int o1Month = 0;
+            int o2Month = 0;
+            
+            if (o1MonthString.equals("January"))
+            	o1Month = 1;
+            else if (o1MonthString.equals("February"))
+            	o1Month = 2;
+            else if (o1MonthString.equals("March"))
+            	o1Month = 3;
+            else if (o1MonthString.equals("April"))
+            	o1Month = 4;
+            else if (o1MonthString.equals("May"))
+            	o1Month = 5;
+            else if (o1MonthString.equals("June"))
+            	o1Month = 6;
+            else if (o1MonthString.equals("July"))
+            	o1Month = 7;
+            else if (o1MonthString.equals("August"))
+            	o1Month = 8;
+            else if (o1MonthString.equals("September"))
+            	o1Month = 9;
+            else if (o1MonthString.equals("October"))
+            	o1Month = 10;
+            else if (o1MonthString.equals("November"))
+            	o1Month = 11;
+            else if (o1MonthString.equals("December"))
+            	o1Month = 12;
+            
+            if (o2MonthString.equals("January"))
+            	o2Month = 1;
+            else if (o2MonthString.equals("February"))
+            	o2Month = 2;
+            else if (o2MonthString.equals("March"))
+            	o2Month = 3;
+            else if (o2MonthString.equals("April"))
+            	o2Month = 4;
+            else if (o2MonthString.equals("May"))
+            	o2Month = 5;
+            else if (o2MonthString.equals("June"))
+            	o2Month = 6;
+            else if (o2MonthString.equals("July"))
+            	o2Month = 7;
+            else if (o2MonthString.equals("August"))
+            	o2Month = 8;
+            else if (o2MonthString.equals("September"))
+            	o2Month = 9;
+            else if (o2MonthString.equals("October"))
+            	o2Month = 10;
+            else if (o2MonthString.equals("November"))
+            	o2Month = 11;
+            else if (o2MonthString.equals("December"))
+            	o2Month = 12;
+            
+            if(o1Year > o2Year) {
+            	result = 1;
+            }
+            else if(o1Year < o2Year) {
+            	result = -1;
+            }
+            else {
+            	if(o1Month > o2Month) {
+            		result = 1;
+            	}
+            	else if(o2Month > o1Month) {
+            		result = -1;
+            	}
+            	else {
+            		result = 0;
+            	}
+            	
+            }
+            
+            return result;
+        }
+    }
 
 }
