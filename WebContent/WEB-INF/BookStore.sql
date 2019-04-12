@@ -136,6 +136,12 @@ FOREIGN KEY(bid) REFERENCES Book(bid)
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12202015', 'b001', 'VIEW');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12242015', 'b001', 'CART');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12252015', 'b001', 'PURCHASE');
+INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12252015', 'b001', 'PURCHASE');
+INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('11252015', 'b002', 'PURCHASE');
+INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('11252015', 'b001', 'PURCHASE');
+INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('11252015', 'b002', 'PURCHASE');
+INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('01252015', 'b002', 'PURCHASE');
+INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('04252011', 'b004', 'PURCHASE');
 #
 #
 /* account details
