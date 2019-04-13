@@ -102,7 +102,7 @@ public class model {
     /****************** Books Module from here *****************/
    public Collection<BookBean> getAllBooks() throws Exception {
 
-        return bookDAO.retrieveAllBooks().values();
+        return bookDAO.retrieveAllBooksMap().values();
 
      }
 
