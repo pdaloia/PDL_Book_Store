@@ -2,31 +2,33 @@ package bean;
 
 public class POBean {
 	
-	private String id;
+	private int id;
 	private String lname;
 	private String fname;
 	private String status;
-	private String address;
+	private int address;
+	private String day; 
 	
 	public POBean() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public POBean(String id, String lname, String fname, String status, String address) {
+	public POBean(int id, String lname, String fname, String status, int address, String day) {
 		super();
 		this.id = id;
 		this.lname = lname;
 		this.fname = fname;
 		this.status = status;
 		this.address = address;
+		this.day = day; 
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -54,12 +56,21 @@ public class POBean {
 		this.status = status;
 	}
 
-	public String getAddress() {
+	public int getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(int address) {
 		this.address = address;
 	}
 
+	public String getDay() {
+		return day;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
+	}
+
+	
 }
