@@ -194,12 +194,16 @@ public class model {
     	return msg;
     }
     
-    /****************** Payment Module from here *****************/
+    /****************** VisitEvent Module from here *****************/
     
     public LinkedList<VisitEventBean> retrieveBooksSold() throws Exception{
     	LinkedList<VisitEventBean> report = new LinkedList<VisitEventBean>();
     	report = visitEventDAO.retrieveBooksSold();
     	return report;
+    }
+	
+    public void createVisitEvent(String bid, String eventtype) throws Exception{
+    	visitEventDAO.createVisitEvent(bid, eventtype);
     }
     
     
