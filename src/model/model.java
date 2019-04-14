@@ -37,51 +37,18 @@ public class model {
 
     public model() {
 
-        try {
+      try {
         	addressDAO = new AddressDAO();
+        	 bookDAO = new BookDAO();
+        	 reviewDAO = new ReviewDAO();
+        	 accountDAO = new AccountDAO();
+        	 poDAO = new PODAO();
+        	 cartDAO = new CartDAO();
+        	 visitEventDAO = new VisitEventDAO();
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        try {
-            bookDAO = new BookDAO();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try {
-            reviewDAO = new ReviewDAO();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try {
-            accountDAO = new AccountDAO();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try {
-        	poDAO = new PODAO();
-
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try {
-            cartDAO = new CartDAO();
-
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
-        try {
-			visitEventDAO = new VisitEventDAO();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
       
 
     }
