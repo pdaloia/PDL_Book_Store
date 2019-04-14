@@ -83,6 +83,7 @@ lname VARCHAR(20) NOT NULL,
 fname VARCHAR(20) NOT NULL,
 status ENUM('ORDERED','PROCESSED','DENIED') NOT NULL,
 address INT UNSIGNED NOT NULL,
+day VARCHAR(20) NOT NULL,
 PRIMARY KEY(id),
 INDEX (address),
 FOREIGN KEY (address) REFERENCES Address (id) ON DELETE CASCADE
@@ -90,9 +91,9 @@ FOREIGN KEY (address) REFERENCES Address (id) ON DELETE CASCADE
 #
 # Inserting data for table 'PO'
 #
-INSERT INTO PO (id, lname, fname, status, address) VALUES (1, 'John', 'White', 'PROCESSED', '1');
-INSERT INTO PO (id, lname, fname, status, address) VALUES (2, 'Peter', 'Black', 'DENIED', '2');
-INSERT INTO PO (id, lname, fname, status, address) VALUES (3, 'Andy', 'Green', 'ORDERED', '3');
+INSERT INTO PO (id, lname, fname, status, address, day) VALUES (1, 'John', 'White', 'PROCESSED', '1','12202015');
+INSERT INTO PO (id, lname, fname, status, address, day) VALUES (2, 'Peter', 'Black', 'DENIED', '2','12242015');
+INSERT INTO PO (id, lname, fname, status, address, day) VALUES (3, 'Andy', 'Green', 'ORDERED', '3','01252015');
 #
 #
 
@@ -116,6 +117,7 @@ FOREIGN KEY(bid) REFERENCES Book(bid) ON DELETE CASCADE
 #
 INSERT INTO POItem (id, bid, price) VALUES (1, 'b001', '20');
 INSERT INTO POItem (id, bid, price) VALUES (2, 'b002', '201');
+INSERT INTO POItem (id, bid, price) VALUES (2, 'b003', '400');
 INSERT INTO POItem (id, bid, price) VALUES (3, 'b003', '100');
 #
 #
@@ -136,10 +138,8 @@ FOREIGN KEY(bid) REFERENCES Book(bid)
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12202015', 'b001', 'VIEW');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12242015', 'b001', 'CART');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12252015', 'b001', 'PURCHASE');
-INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('12252015', 'b001', 'PURCHASE');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('11252015', 'b002', 'PURCHASE');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('11252015', 'b001', 'PURCHASE');
-INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('11252015', 'b002', 'PURCHASE');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('01252015', 'b002', 'PURCHASE');
 INSERT INTO VisitEvent (day, bid, eventtype) VALUES ('04252011', 'b004', 'PURCHASE');
 #
@@ -186,3 +186,9 @@ INSERT INTO Reviews (bid, email, review, rating) VALUES ('b002', '321@gmail.com'
 INSERT INTO Reviews (bid, email, review, rating) VALUES ('b004', '111@gmail.com', 'good but bad', 3);
 #
 #
+
+/*
+SELECT BOOK.title, BOOK.price as itemPrice, POItem.price as totalPrice, PO.day
+		FROM BOOK, POItem, PO
+		WHERE POItem.bid = BOOK.bid AND PO.id = POItem.id AND PO.id=2
+*/
