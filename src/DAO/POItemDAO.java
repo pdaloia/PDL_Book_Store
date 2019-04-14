@@ -32,11 +32,11 @@ public class POItemDAO {
 		
 		while (r.next()){
 			
-			String id = r.getString("ID");
+			int id = r.getInt("ID");
 			String bid = r.getString("BID");
 			String price = r.getString("PRICE");
 			POItemBean current;
-			current = new POItemBean(id, bid, price);
+			current = new POItemBean(String.valueOf(id), bid, price);
 			rv.put(id, current);
 			
 		}
