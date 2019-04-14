@@ -23,6 +23,20 @@ public class VisitEventDAO {
 		}
 	}
 	
+	public void createVisitEvent(String bid, String eventtype) throws SQLException{
+		
+		String day = new SimpleDateFormat("MMddyyyy").format(new Date());
+		String query = "INSERT INTO VisitEvent (day, bid, eventtype) VALUES (\'" 
+				+ day + "\', \'" + bid + "\', \'" + eventtype + "\')";
+		Connection con = this.ds.getConnection();
+		PreparedStatement p = con.prepareStatement(query);
+		p.executeUpdate();
+		
+		p.close();
+		con.close();
+		
+	}
+	
 	public LinkedList<VisitEventBean> retrieveBooksSold() throws SQLException{
 		//String query = "select * from students where surname like '%" + namePrefix + "%' and credit_taken >= " + credit_taken;
 		String query = "select * from visitevent where eventtype like 'purchase'";
