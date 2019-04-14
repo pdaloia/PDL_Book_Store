@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <listener>
-        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
-    </listener>
-    <servlet>
-        <servlet-name>SoapWebService</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SoapWebService</servlet-name>
-        <url-pattern>/SoapWebService</url-pattern>
-    </servlet-mapping>
-    <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
-    </session-config>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+ <servlet>
+	<servlet-name>Jersey</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <load-on-startup>1</load-on-startup>
+ </servlet>
+ 
+
+ <servlet>
+     <servlet-name>SoapWebService</servlet-name>
+     <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+     <load-on-startup>1</load-on-startup>
+ </servlet>
+ 
+ <servlet-mapping>
+      <servlet-name>Jersey</servlet-name>
+      <url-pattern>/rest/*</url-pattern>
+ </servlet-mapping>
+ 
+ <servlet-mapping>
+     <servlet-name>SoapWebService</servlet-name>
+     <url-pattern>/SoapWebService</url-pattern>
+ </servlet-mapping>
+ 
+ <session-config>
+     <session-timeout>
+         30
+     </session-timeout>
+ </session-config>
+ 
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <error-page>
+    <error-code>404</error-code>
+    <location>/res/my404.jspx</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>java.lang.Exception</exception-type>
+    <location>/res/myException.jspx</location>
+  </error-page>
+  
 </web-app>
