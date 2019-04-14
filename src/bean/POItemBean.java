@@ -2,7 +2,7 @@ package bean;
 
 public class POItemBean {
 	
-	private String id;
+	private int id;
 	private String bid;
 	private String price;
 	
@@ -11,18 +11,18 @@ public class POItemBean {
 		// TODO Auto-generated constructor stub
 	}
 
-	public POItemBean(String id, String bid, String price) {
+	public POItemBean(int id, String bid, String price) {
 		super();
 		this.id = id;
 		this.bid = bid;
 		this.price = price;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
