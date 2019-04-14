@@ -1,7 +1,9 @@
 package DAO;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ public class PODAO {
 		String msg = "";
 		String status = "";
 		String query = "select count(*) from po";
+		String day = new SimpleDateFormat("MMddyyyy").format(new Date());
 		Connection con = this.ds.getConnection();
 		PreparedStatement p1 = con.prepareStatement(query);
 		ResultSet r = p1.executeQuery();
@@ -43,7 +46,7 @@ public class PODAO {
 			
 			// update PO Table
 			poRow++;
-			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', " + address + ")");
+			p1.executeUpdate("insert into PO " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', " + address + ", \'" + day + "\')");
 					
 		}
 		// 2. Authorization succeeded. Successfully place an order. 
@@ -55,7 +58,7 @@ public class PODAO {
 			
 			// update PO Table
 			poRow++;
-			p1.executeUpdate("insert into po " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', " + address + ")");
+			p1.executeUpdate("insert into PO " + "VALUES (" + poRow + ", \'" + lname + "\', \'" + fname + "\', \'" + status + "\', " + address + ", \'" + day + "\')");
 
 
 			// Add each book in the Cart to POITEM Table.
@@ -76,24 +79,25 @@ public class PODAO {
 	
 	
 	
-	public Map<String, POBean> retrieveAllPOs() throws SQLException{
+	public List<POBean> retrieveAllPOs() throws SQLException{
 		//String query = "select * from students where surname like '%" + namePrefix + "%' and credit_taken >= " + credit_taken;
 		String query = "select * from po";
-		Map<String, POBean> rv = new HashMap<String, POBean>();
+		List<POBean> rv = new ArrayList<POBean>();
 		Connection con = this.ds.getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		ResultSet r = p.executeQuery();
 		
 		while (r.next()){
 			
-			String id = r.getString("ID");
+			int id = r.getInt("ID");
 			String lname = r.getString("LNAME");
 			String fname = r.getString("FNAME");
 			String status = r.getString("STATUS");
-			String address = r.getString("ADDRESS");
+			int address = r.getInt("ADDRESS");
+			String day = new SimpleDateFormat("MMddyyyy").format(new Date());
 			POBean current;
-			current = new POBean(id, lname, fname, status, address);
-			rv.put(id, current);
+			current = new POBean(id, lname, fname, status, address, day);
+			rv.add(current);
 			
 		}
 		
